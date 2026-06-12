@@ -778,7 +778,7 @@ body.mobile svg{max-width:100%}
   <div style="padding:10px 15px;background:rgba(239,68,68,.06);border-bottom:1px solid rgba(212,160,23,.08)"><div class="vsym" style="color:var(--red-l)">LI</div><div class="vname">Límite Inferior</div><div class="vdesc">Saldo mínimo exigido (ej. saldo mínimo bancario). Es un dato de la empresa.</div></div>
   <div style="padding:10px 15px;background:rgba(34,197,94,.04);border-bottom:1px solid rgba(212,160,23,.08)"><div class="vsym" style="color:var(--green-l)">b</div><div class="vname">Costo por Transacción</div><div class="vdesc">Igual que Baumol. Costo fijo de cada compra/venta de valores negociables.</div></div>
   <div style="padding:10px 15px;background:rgba(168,85,247,.05);border-bottom:1px solid rgba(212,160,23,.08)"><div class="vsym" style="color:var(--purple-l)">σ²</div><div class="vname">Varianza diaria del flujo</div><div class="vdesc">Varianza de las entradas/salidas netas de caja por día. Mide volatilidad.</div></div>
-  <div style="padding:10px 15px;background:rgba(239,68,68,.04)"><div class="vsym" style="color:var(--red-l)">i</div><div class="vname">Tasa diaria ⚠️</div><div class="vdesc"><strong style="color:var(--orange-l)">Debe ser diaria</strong>: i_anual ÷ 365. Misma periodicidad que σ².</div></div>
+  <div style="padding:10px 15px;background:rgba(239,68,68,.04)"><div class="vsym" style="color:var(--red-l)">i</div><div class="vname">Tasa diaria efectiva ⚠️</div><div class="vdesc"><strong style="color:var(--orange-l)">Debe ser diaria y efectiva</strong>: i_diaria = (1 + i_anual)<sup>1/365</sup> - 1. Misma periodicidad que σ².</div></div>
 </div>
 </div>
 </div>
@@ -798,13 +798,13 @@ body.mobile svg{max-width:100%}
       <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(6,182,212,.15);padding-bottom:7px"><span style="font-size:13px;color:var(--red-l);font-family:Georgia;font-style:italic">LI =</span><span style="font-size:14px;color:var(--white);font-weight:700">$10.000</span></div>
       <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(6,182,212,.15);padding-bottom:7px"><span style="font-size:13px;color:var(--green-l);font-family:Georgia;font-style:italic">b =</span><span style="font-size:14px;color:var(--white);font-weight:700">$1.000</span></div>
       <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(6,182,212,.15);padding-bottom:7px"><span style="font-size:13px;color:var(--purple-l);font-family:Georgia;font-style:italic">σ² =</span><span style="font-size:14px;color:var(--white);font-weight:700">$900.000.000 /día</span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--red-l);font-family:Georgia;font-style:italic">i =</span><span style="font-size:14px;color:var(--white);font-weight:700">0,027%/día (10%÷365)</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--red-l);font-family:Georgia;font-style:italic">i =</span><span style="font-size:14px;color:var(--white);font-weight:700">0,0311%/día = (1,10)<sup>1/365</sup> - 1</span></div>
     </div>
   </div>
-  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">1</div><div class="sc"><div class="stit">Spread S* (monto óptimo de transacción)</div><div class="scal">S* = (3 × 1.000 × 900.000.000 / 4 × 0,00027)^(1/3)<br>S* = (2.700.000.000 / 0,00108)^(1/3)<br>S* = (2,5 × 10¹²)^(1/3)<br><span style="color:var(--gold-l)">S* ≈ $13.572</span></div></div></div>
-  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">2</div><div class="sc"><div class="stit">Punto de retorno Z</div><div class="scal">Z = LI + S*/3 = 10.000 + 13.572/3<br>Z = 10.000 + 4.524 = <span style="color:var(--gold-l)">$14.524</span></div></div></div>
-  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">3</div><div class="sc"><div class="stit">Límite Superior LS</div><div class="scal">LS = LI + 3·S* = 10.000 + 3×13.572 = <span style="color:var(--green-l)">$50.716</span></div></div></div>
-  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">4</div><div class="sc"><div class="stit">Saldo promedio</div><div class="scal">Saldo prom. = LI + (4/3)·S* = 10.000 + (4/3)×13.572<br>= 10.000 + 18.096 = <span style="color:var(--gold-l)">$28.096</span></div></div></div>
+  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">1</div><div class="sc"><div class="stit">Spread S* (monto óptimo de transacción)</div><div class="scal">i_diaria = (1 + 0,12)^(1/365) - 1 = 0,0003105<br>S* = (3 × 1.000 × 900.000.000 / 4 × 0,0003105)^(1/3)<br>S* = (2.700.000.000 / 0,001242)^(1/3)<br>S* = (2,173 × 10¹²)^(1/3)<br><span style="color:var(--gold-l)">S* ≈ $129.538</span></div></div></div>
+  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">2</div><div class="sc"><div class="stit">Punto de retorno Z</div><div class="scal">Z = LI + S*/3 = 10.000 + 129.538/3<br>Z = 10.000 + 43.179 = <span style="color:var(--gold-l)">$53.179</span></div></div></div>
+  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">3</div><div class="sc"><div class="stit">Límite Superior LS</div><div class="scal">LS = LI + 3·S* = 10.000 + 3×129.538 = <span style="color:var(--green-l)">$398.613</span></div></div></div>
+  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">4</div><div class="sc"><div class="stit">Saldo promedio</div><div class="scal">Saldo prom. = LI + (4/3)·S* = 10.000 + (4/3)×129.538<br>= 10.000 + 172.717 = <span style="color:var(--gold-l)">$182.717</span></div></div></div>
 </div>
 
 <!-- GRÁFICO BANDA RESULTADO - CORREGIDO -->
@@ -821,15 +821,15 @@ body.mobile svg{max-width:100%}
       <!-- LI -->
       <line x1="36" y1="175" x2="236" y2="175" stroke="var(--red-l)"   stroke-width="2.5" stroke-dasharray="7,4"/>
       <!-- labels con valores -->
-      <text x="240" y="34"  fill="var(--green-l)" font-size="11" font-family="Georgia" font-weight="700">LS = $50.716</text>
-      <text x="240" y="107" fill="var(--gold-l)"  font-size="11" font-family="Georgia" font-weight="700">Z = $14.524</text>
+      <text x="240" y="34"  fill="var(--green-l)" font-size="11" font-family="Georgia" font-weight="700">LS = $398.613</text>
+      <text x="240" y="107" fill="var(--gold-l)"  font-size="11" font-family="Georgia" font-weight="700">Z = $53.179</text>
       <text x="240" y="179" fill="var(--red-l)"   font-size="11" font-family="Georgia" font-weight="700">LI = $10.000</text>
       <!-- S* brace -->
       <line x1="28" y1="30"  x2="28" y2="175" stroke="rgba(212,160,23,.55)" stroke-width="1.5"/>
       <line x1="24" y1="30"  x2="32" y2="30"  stroke="rgba(212,160,23,.55)" stroke-width="1.5"/>
       <line x1="24" y1="175" x2="32" y2="175" stroke="rgba(212,160,23,.55)" stroke-width="1.5"/>
       <text x="8" y="107" fill="var(--gold)" font-size="10" font-family="Georgia" font-style="italic" transform="rotate(-90,8,107)" text-anchor="middle">3·S*</text>
-      <!-- S* = 13572 marcado -->
+      <!-- S* = 129538 marcado -->
       <text x="8" y="178" fill="rgba(212,160,23,.5)" font-size="8" transform="rotate(-90,8,178)" text-anchor="middle">S*</text>
       <!-- punto Z -->
       <circle cx="136" cy="103" r="6" fill="var(--gold)" stroke="var(--bg)" stroke-width="2"/>
@@ -840,8 +840,8 @@ body.mobile svg{max-width:100%}
     </svg>
   </div>
   <div style="display:flex;flex-direction:column;gap:7px">
-    <div style="display:flex;justify-content:space-between;padding:8px 13px;background:rgba(34,197,94,.08);border-radius:8px;border:1px solid rgba(34,197,94,.2)"><span style="font-size:12.5px;color:var(--green-l)">Caja &gt; $50.716</span><span style="font-size:12.5px;font-weight:700;color:var(--green-l)">→ Comprar valores ↓ a Z</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 13px;background:rgba(212,160,23,.07);border-radius:8px;border:1px solid rgba(212,160,23,.2)"><span style="font-size:12.5px;color:var(--gold-l)">Entre $10.000 y $50.716</span><span style="font-size:12.5px;font-weight:700;color:var(--gold-l)">→ No intervenir</span></div>
+    <div style="display:flex;justify-content:space-between;padding:8px 13px;background:rgba(34,197,94,.08);border-radius:8px;border:1px solid rgba(34,197,94,.2)"><span style="font-size:12.5px;color:var(--green-l)">Caja &gt; $398.613</span><span style="font-size:12.5px;font-weight:700;color:var(--green-l)">→ Comprar valores ↓ a Z</span></div>
+    <div style="display:flex;justify-content:space-between;padding:8px 13px;background:rgba(212,160,23,.07);border-radius:8px;border:1px solid rgba(212,160,23,.2)"><span style="font-size:12.5px;color:var(--gold-l)">Entre $10.000 y $398.613</span><span style="font-size:12.5px;font-weight:700;color:var(--gold-l)">→ No intervenir</span></div>
     <div style="display:flex;justify-content:space-between;padding:8px 13px;background:rgba(239,68,68,.08);border-radius:8px;border:1px solid rgba(239,68,68,.2)"><span style="font-size:12.5px;color:var(--red-l)">Caja &lt; $10.000</span><span style="font-size:12.5px;font-weight:700;color:var(--red-l)">→ Vender valores ↑ a Z</span></div>
   </div>
 </div>
@@ -968,7 +968,7 @@ body.mobile svg{max-width:100%}
     </div>
   </div>
   <div style="padding:11px 15px;background:rgba(249,115,22,.07);border-radius:10px;border:1px solid rgba(249,115,22,.25);font-size:13px;color:var(--gray)">
-    ⚠️ <strong style="color:var(--orange-l)">Importante:</strong> convertir <em>i</em> a tasa <strong style="color:var(--white)">diaria</strong> antes de calcular → i_diaria = 12% ÷ 365 = 0,0003288
+    ⚠️ <strong style="color:var(--orange-l)">Importante:</strong> convertir <em>i</em> a tasa <strong style="color:var(--white)">diaria efectiva</strong> antes de calcular → i_diaria = (1 + 12%)<sup>1/365</sup> - 1 = 0,0003105
   </div>
 </div>
 
@@ -1013,7 +1013,7 @@ body.mobile svg{max-width:100%}
 <div class="card" style="margin-top:13px;background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.25);display:flex;align-items:center;gap:13px;padding:13px 18px">
   <div style="font-size:24px">🎯</div>
   <div style="font-size:13px;color:var(--gray);line-height:1.6">
-    <strong style="color:var(--red-l)">Trampa frecuente en certamen:</strong> En Miller-Orr, usar <em>i</em> anual en lugar de diaria → el resultado queda 365 veces mal escalado. <strong style="color:var(--white)">Siempre dividir por 365 antes de calcular S*.</strong>
+    <strong style="color:var(--red-l)">Trampa frecuente en certamen:</strong> En Miller-Orr, usar <em>i</em> anual en lugar de tasa diaria efectiva → el resultado queda mal escalado. <strong style="color:var(--white)">Convierte primero la tasa a diaria efectiva y recién calcula S*.</strong>
   </div>
 </div>
 </div>
