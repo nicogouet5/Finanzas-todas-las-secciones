@@ -778,7 +778,7 @@ body.mobile svg{max-width:100%}
   <div style="padding:10px 15px;background:rgba(239,68,68,.06);border-bottom:1px solid rgba(212,160,23,.08)"><div class="vsym" style="color:var(--red-l)">LI</div><div class="vname">Límite Inferior</div><div class="vdesc">Saldo mínimo exigido (ej. saldo mínimo bancario). Es un dato de la empresa.</div></div>
   <div style="padding:10px 15px;background:rgba(34,197,94,.04);border-bottom:1px solid rgba(212,160,23,.08)"><div class="vsym" style="color:var(--green-l)">b</div><div class="vname">Costo por Transacción</div><div class="vdesc">Igual que Baumol. Costo fijo de cada compra/venta de valores negociables.</div></div>
   <div style="padding:10px 15px;background:rgba(168,85,247,.05);border-bottom:1px solid rgba(212,160,23,.08)"><div class="vsym" style="color:var(--purple-l)">σ²</div><div class="vname">Varianza diaria del flujo</div><div class="vdesc">Varianza de las entradas/salidas netas de caja por día. Mide volatilidad.</div></div>
-  <div style="padding:10px 15px;background:rgba(239,68,68,.04)"><div class="vsym" style="color:var(--red-l)">i</div><div class="vname">Tasa diaria efectiva ⚠️</div><div class="vdesc"><strong style="color:var(--orange-l)">Debe ser diaria y efectiva</strong>: i_diaria = (1 + i_anual)<sup>1/365</sup> - 1. Misma periodicidad que σ².</div></div>
+  <div style="padding:10px 15px;background:rgba(239,68,68,.04)"><div class="vsym" style="color:var(--red-l)">i</div><div class="vname">Tasa diaria ⚠️</div><div class="vdesc"><strong style="color:var(--orange-l)">Usa la tasa diaria que te entregan</strong>. Misma periodicidad que σ².</div></div>
 </div>
 </div>
 </div>
@@ -798,10 +798,10 @@ body.mobile svg{max-width:100%}
       <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(6,182,212,.15);padding-bottom:7px"><span style="font-size:13px;color:var(--red-l);font-family:Georgia;font-style:italic">LI =</span><span style="font-size:14px;color:var(--white);font-weight:700">$10.000</span></div>
       <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(6,182,212,.15);padding-bottom:7px"><span style="font-size:13px;color:var(--green-l);font-family:Georgia;font-style:italic">b =</span><span style="font-size:14px;color:var(--white);font-weight:700">$1.000</span></div>
       <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(6,182,212,.15);padding-bottom:7px"><span style="font-size:13px;color:var(--purple-l);font-family:Georgia;font-style:italic">σ² =</span><span style="font-size:14px;color:var(--white);font-weight:700">$900.000.000 /día</span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--red-l);font-family:Georgia;font-style:italic">i =</span><span style="font-size:14px;color:var(--white);font-weight:700">0,0311%/día = (1,10)<sup>1/365</sup> - 1</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--red-l);font-family:Georgia;font-style:italic">i =</span><span style="font-size:14px;color:var(--white);font-weight:700">0,0311%/día</span></div>
     </div>
   </div>
-  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">1</div><div class="sc"><div class="stit">Spread S* (monto óptimo de transacción)</div><div class="scal">i_diaria = (1 + 0,12)^(1/365) - 1 = 0,0003105<br>S* = (3 × 1.000 × 900.000.000 / 4 × 0,0003105)^(1/3)<br>S* = (2.700.000.000 / 0,001242)^(1/3)<br>S* = (2,173 × 10¹²)^(1/3)<br><span style="color:var(--gold-l)">S* ≈ $129.538</span></div></div></div>
+  <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">1</div><div class="sc"><div class="stit">Spread S* (monto óptimo de transacción)</div><div class="scal">i_diaria = 0,0003105<br>S* = (3 × 1.000 × 900.000.000 / 4 × 0,0003105)^(1/3)<br>S* = (2.700.000.000 / 0,001242)^(1/3)<br>S* = (2,173 × 10¹²)^(1/3)<br><span style="color:var(--gold-l)">S* ≈ $129.538</span></div></div></div>
   <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">2</div><div class="sc"><div class="stit">Punto de retorno Z</div><div class="scal">Z = LI + S*/3 = 10.000 + 129.538/3<br>Z = 10.000 + 43.179 = <span style="color:var(--gold-l)">$53.179</span></div></div></div>
   <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">3</div><div class="sc"><div class="stit">Límite Superior LS</div><div class="scal">LS = LI + 3·S* = 10.000 + 3×129.538 = <span style="color:var(--green-l)">$398.613</span></div></div></div>
   <div class="step"><div class="sn" style="background:var(--cyan);color:var(--bg)">4</div><div class="sc"><div class="stit">Saldo promedio</div><div class="scal">Saldo prom. = LI + (4/3)·S* = 10.000 + (4/3)×129.538<br>= 10.000 + 172.717 = <span style="color:var(--gold-l)">$182.717</span></div></div></div>
@@ -968,7 +968,7 @@ body.mobile svg{max-width:100%}
     </div>
   </div>
   <div style="padding:11px 15px;background:rgba(249,115,22,.07);border-radius:10px;border:1px solid rgba(249,115,22,.25);font-size:13px;color:var(--gray)">
-    ⚠️ <strong style="color:var(--orange-l)">Importante:</strong> convertir <em>i</em> a tasa <strong style="color:var(--white)">diaria efectiva</strong> antes de calcular → i_diaria = (1 + 12%)<sup>1/365</sup> - 1 = 0,0003105
+    ⚠️ <strong style="color:var(--orange-l)">Importante:</strong> usa directamente la <strong style="color:var(--white)">tasa diaria</strong> que te den en el enunciado.
   </div>
 </div>
 
@@ -1013,7 +1013,7 @@ body.mobile svg{max-width:100%}
 <div class="card" style="margin-top:13px;background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.25);display:flex;align-items:center;gap:13px;padding:13px 18px">
   <div style="font-size:24px">🎯</div>
   <div style="font-size:13px;color:var(--gray);line-height:1.6">
-    <strong style="color:var(--red-l)">Trampa frecuente en certamen:</strong> En Miller-Orr, usar <em>i</em> anual en lugar de tasa diaria efectiva → el resultado queda mal escalado. <strong style="color:var(--white)">Convierte primero la tasa a diaria efectiva y recién calcula S*.</strong>
+    <strong style="color:var(--red-l)">Trampa frecuente en certamen:</strong> En Miller-Orr, usar una tasa con periodicidad distinta a la de σ² → el resultado queda mal escalado. <strong style="color:var(--white)">Usa la tasa diaria desde el inicio.</strong>
   </div>
 </div>
 </div>
