@@ -981,73 +981,67 @@ b,strong{color:#fff}
           <span class="chip cg"><i>H</i> costo mantener por u/año ($)</span>
         </div>
       </div>
-      <div class="card card-dark" style="font-size:12px;color:var(--gray-l);line-height:1.9;padding:11px 14px">
-        <span style="color:var(--amber)">Costo total</span> = <span class="kr">D·S/Q</span> + <span class="kg">H·Q/2</span><br>
-        <span style="color:var(--amber)">En EOQ</span>: costo de orden <strong>iguala</strong> costo de mantener ✓<br>
-        <span class="kc">Inventario promedio</span> = EOQ/2 · <span class="kc">N° pedidos/año</span> = D/EOQ
-      </div>
-      <div class="tip" style="margin-top:10px"><div style="font-size:17px">🔗</div><div>Baumol es el <strong>EOQ del efectivo</strong>: reemplaza unidades por pesos, "costo de orden" por transacción, "costo de mantener" por tasa de oportunidad.</div></div>
-    </div>
-    <div>
-      <!-- GRÁFICO U — COSTOS EOQ -->
-      <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,180,61,.25);border-radius:12px;padding:10px 8px 6px;margin-bottom:10px">
-        <div style="font-size:9.5px;color:var(--amber);font-weight:700;letter-spacing:1.5px;margin-bottom:4px;text-align:center">CURVA DE COSTO TOTAL — MODELO EOQ</div>
-        <svg viewBox="0 0 370 185" width="100%" style="display:block;max-height:185px" aria-label="Curva U costo total EOQ">
-          <!-- ejes -->
-          <line x1="48" y1="14" x2="48" y2="162" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
-          <line x1="48" y1="161" x2="355" y2="161" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
-          <polygon points="48,10 44,18 52,18" fill="rgba(255,255,255,.35)"/>
-          <polygon points="359,161 351,157 351,165" fill="rgba(255,255,255,.35)"/>
-          <text x="362" y="165" fill="rgba(255,255,255,.4)" font-size="10" font-family="Georgia,serif" font-style="italic">Q</text>
-          <text x="22" y="90" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9" transform="rotate(-90,22,90)">Costo ($)</text>
-
-          <!-- Costo de ordenar CO = D·S/Q (hipérbola, rojo) -->
-          <!-- Points: Q=5,x=53,y=36 | Q=6,x=57,y=59 | Q=8,x=66,y=88 | Q=10,x=74,y=105 | Q=12,x=83,y=117 | Q=16,x=99,y=131 | Q=20,x=115,y=140 | Q=24,x=132,y=146 | Q=32,x=164,y=153 | Q=40,x=197,y=157 | Q=48,x=229,y=160 -->
-          <polyline points="53,36 57,59 66,88 74,105 83,117 99,131 115,140 132,146 164,153 197,157 229,160 280,163"
-            fill="none" stroke="#ff5d72" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="285" y="165" fill="#ff5d72" font-size="9.5" font-weight="700">Ordenar</text>
-
-          <!-- Costo de mantener CM = H·Q/2 (línea, verde) -->
-          <!-- Linear: Q=4,x=44,y=164 → Q=48,x=229,y=44 -->
-          <line x1="44" y1="164" x2="290" y2="42" stroke="#2bff88" stroke-width="2" stroke-linecap="round"/>
-          <text x="285" y="40" fill="#2bff88" font-size="9.5" font-weight="700">Mantener</text>
-
-          <!-- Costo total CT (U-shape, ámbar) -->
-          <!-- Q=6,y=43 | Q=8,y=66 | Q=10,y=78 | Q=12,y=84 | Q=14,y=87 | Q=16,y=88 | Q=18,y=87 | Q=20,y=86 | Q=24,y=81 | Q=28,y=74 | Q=32,y=66 | Q=40,y=49 | Q=48,y=30 -->
-          <polyline points="57,43 66,66 74,78 83,84 91,87 99,88 107,87 115,86 132,81 148,74 164,66 197,49 229,30"
-            fill="none" stroke="#ffb43d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="232" y="28" fill="#ffb43d" font-size="9.5" font-weight="700">Total</text>
-
-          <!-- Línea vertical EOQ -->
-          <line x1="99" y1="18" x2="99" y2="161" stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="4,3"/>
-
-          <!-- Punto mínimo CT en EOQ -->
-          <circle cx="99" cy="88" r="5" fill="#ffb43d"/>
-          <!-- Marca en eje X: EOQ = 16 -->
-          <line x1="99" y1="161" x2="99" y2="168" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
-          <text x="99" y="177" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="9.5" font-weight="700">EOQ=16</text>
-
-          <!-- Punto de intersección CO=CM en EOQ -->
-          <circle cx="99" cy="131" r="3.5" fill="#ff5d72"/>
-          <circle cx="99" cy="131" r="3.5" fill="#2bff88" opacity="0.8"/>
-          <text x="104" y="128" fill="rgba(255,255,255,.6)" font-size="8.5">CO=CM</text>
-
-          <!-- eje Y label mínimo -->
-          <text x="43" y="91" text-anchor="end" fill="rgba(255,180,61,.8)" font-size="8.5">CT min</text>
-          <line x1="44" y1="88" x2="48" y2="88" stroke="rgba(255,180,61,.5)" stroke-width="1"/>
+      <!-- GRÁFICO DIENTE DE SIERRA — INVENTARIO EOQ -->
+      <div style="margin:10px 0 8px;background:rgba(0,0,0,.35);border:1px solid rgba(255,180,61,.25);border-radius:12px;padding:10px 8px 6px">
+        <div style="font-size:9.5px;color:var(--amber);font-weight:700;letter-spacing:1.5px;margin-bottom:4px;text-align:center">COMPORTAMIENTO DEL INVENTARIO — MODELO EOQ</div>
+        <svg viewBox="0 0 370 165" width="100%" style="display:block;max-height:165px" aria-label="Gráfico diente de sierra EOQ">
+          <rect x="46" y="77" width="308" height="72" fill="rgba(255,180,61,.04)" rx="2"/>
+          <line x1="46" y1="18" x2="46" y2="145" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
+          <line x1="46" y1="144" x2="360" y2="144" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
+          <polygon points="46,14 42,22 50,22" fill="rgba(255,255,255,.35)"/>
+          <polygon points="364,144 356,140 356,148" fill="rgba(255,255,255,.35)"/>
+          <!-- líneas horizontales -->
+          <line x1="46" y1="24" x2="352" y2="24" stroke="rgba(255,180,61,.3)" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="46" y1="84" x2="352" y2="84" stroke="rgba(255,255,255,.25)" stroke-width="1" stroke-dasharray="4,3"/>
+          <!-- CICLO 1 -->
+          <line x1="54" y1="24" x2="148" y2="144" stroke="#ffb43d" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="148" y1="144" x2="148" y2="24" stroke="rgba(43,255,136,.7)" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- CICLO 2 -->
+          <line x1="148" y1="24" x2="248" y2="144" stroke="#ffb43d" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="248" y1="144" x2="248" y2="24" stroke="rgba(43,255,136,.7)" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- CICLO 3 (parcial) -->
+          <line x1="248" y1="24" x2="348" y2="144" stroke="#ffb43d" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- puntos -->
+          <circle cx="148" cy="144" r="4" fill="#ff5d72"/>
+          <circle cx="248" cy="144" r="4" fill="#ff5d72"/>
+          <circle cx="54" cy="24" r="3.5" fill="#ffb43d"/>
+          <circle cx="148" cy="24" r="3.5" fill="#2bff88"/>
+          <circle cx="248" cy="24" r="3.5" fill="#2bff88"/>
+          <!-- etiquetas eje Y -->
+          <text x="40" y="27" text-anchor="end" fill="#ffb43d" font-size="11" font-family="Georgia,serif" font-style="italic">EOQ</text>
+          <text x="40" y="87" text-anchor="end" fill="rgba(255,255,255,.5)" font-size="10" font-family="Georgia,serif" font-style="italic">EOQ/2</text>
+          <text x="40" y="147" text-anchor="end" fill="rgba(255,255,255,.45)" font-size="10" font-family="Georgia,serif">0</text>
+          <text x="370" y="148" fill="rgba(255,255,255,.45)" font-size="11" font-family="Georgia,serif" font-style="italic">t</text>
+          <text x="20" y="90" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9" transform="rotate(-90,20,90)">Stock</text>
+          <!-- anotaciones -->
+          <text x="148" y="116" text-anchor="middle" fill="#2bff88" font-size="9">pedido</text>
+          <text x="248" y="116" text-anchor="middle" fill="#2bff88" font-size="9">pedido</text>
+          <!-- periodo T -->
+          <line x1="54" y1="155" x2="148" y2="155" stroke="rgba(165,120,255,.6)" stroke-width="1"/>
+          <polygon points="54,155 62,152 62,158" fill="rgba(165,120,255,.6)"/>
+          <polygon points="148,155 140,152 140,158" fill="rgba(165,120,255,.6)"/>
+          <text x="101" y="163" text-anchor="middle" fill="rgba(165,120,255,.8)" font-size="9" font-family="Georgia,serif" font-style="italic">ciclo</text>
         </svg>
       </div>
-      <div class="card" style="background:rgba(255,180,61,.06);border:1px solid rgba(255,180,61,.25);margin-bottom:10px;padding:11px 14px">
+      <div class="tip"><div style="font-size:17px">🔗</div><div>Baumol es el <strong>EOQ del efectivo</strong>: D=demanda de caja, S=costo transacción, H=tasa de oportunidad. ¡Misma fórmula, distinto activo!</div></div>
+    </div>
+    <div>
+      <div class="card card-dark" style="font-size:12px;color:var(--gray-l);line-height:1.9;padding:11px 14px;margin-bottom:11px">
+        <span style="color:var(--amber)">Costo total</span> = <span class="kr">D·S/Q</span> + <span class="kg">H·Q/2</span><br>
+        <span style="color:var(--amber)">En EOQ</span>: costo orden = costo mantener ✓<br>
+        <span class="kc">Stock promedio</span> = EOQ/2 · <span class="kc">N° pedidos/año</span> = D/EOQ
+      </div>
+      <div class="card" style="background:rgba(255,180,61,.06);border:1px solid rgba(255,180,61,.25);margin-bottom:11px;padding:11px 14px">
         <div style="font-size:10px;color:var(--amber);font-weight:700;letter-spacing:1.5px;margin-bottom:7px">EJERCICIO — FerreMax S.A.</div>
-        <p style="font-size:12.3px;color:var(--gray-l);line-height:1.6">Demanda anual <span style="color:var(--amber)"><i>D</i> = 480 u</span>; costo por orden <span class="kr"><i>S</i> = $2.000</span>; costo de mantener <span class="kg"><i>H</i> = $7.500/u/año</span>. Calcule EOQ, inventario promedio, N° de pedidos y costo total.</p>
+        <p style="font-size:12.3px;color:var(--gray-l);line-height:1.6">Demanda anual <span style="color:var(--amber)"><i>D</i> = 480 u</span>; costo por orden <span class="kr"><i>S</i> = $2.000</span>; costo de mantener <span class="kg"><i>H</i> = $7.500/u/año</span>. Calcule EOQ, stock promedio, N° de pedidos y costo total.</p>
       </div>
       <button class="reveal-btn" style="background:rgba(255,180,61,.15);color:var(--amber);border-color:rgba(255,180,61,.4)" id="revE" onclick="reveal('solE','revE')">👁 Ver solución</button>
       <div class="solution" id="solE">
         <div class="card" style="margin-top:11px;background:rgba(255,180,61,.04)">
           <div class="step"><div class="sn" style="background:rgba(255,180,61,.2);color:var(--amber)">1</div><div class="sc"><div class="stit">EOQ</div><div class="scal">√(2 × 480 × 2.000 / 7.500)<br>= √(1.920.000 / 7.500) = √256 = <b style="color:var(--amber)">16 unidades</b></div></div></div>
-          <div class="step"><div class="sn" style="background:rgba(255,180,61,.2);color:var(--amber)">2</div><div class="sc"><div class="stit">Inventario promedio</div><div class="scal">EOQ / 2 = <b style="color:var(--amber)">8 unidades</b></div></div></div>
-          <div class="step"><div class="sn" style="background:rgba(255,180,61,.2);color:var(--amber)">3</div><div class="sc"><div class="stit">N° de pedidos/año</div><div class="scal">480 / 16 = <b style="color:var(--amber)">30 pedidos/año</b> (cada 12 días)</div></div></div>
-          <div class="step"><div class="sn" style="background:rgba(255,180,61,.2);color:var(--amber)">4</div><div class="sc"><div class="stit">Costo total anual</div><div class="scal">CO = 30 × 2.000 = $60.000<br>CM = 8 × 7.500 = $60.000 ✓ (se igualan en EOQ)<br>CT = <b style="color:var(--amber)">$120.000</b></div></div></div>
+          <div class="step"><div class="sn" style="background:rgba(255,180,61,.2);color:var(--amber)">2</div><div class="sc"><div class="stit">Stock promedio</div><div class="scal">EOQ / 2 = <b style="color:var(--amber)">8 unidades</b></div></div></div>
+          <div class="step"><div class="sn" style="background:rgba(255,180,61,.2);color:var(--amber)">3</div><div class="sc"><div class="stit">N° de pedidos/año</div><div class="scal">480 / 16 = <b style="color:var(--amber)">30 pedidos/año</b> (cada ~12 días)</div></div></div>
+          <div class="step"><div class="sn" style="background:rgba(255,180,61,.2);color:var(--amber)">4</div><div class="sc"><div class="stit">Costo total anual</div><div class="scal">CO = 30 × 2.000 = $60.000<br>CM = 8 × 7.500 = $60.000 ✓<br>CT = <b style="color:var(--amber)">$120.000</b></div></div></div>
         </div>
       </div>
     </div>
