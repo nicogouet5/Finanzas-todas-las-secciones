@@ -1,0 +1,13 @@
+.vercel
+.DS_Store
+.claude/
+.antigravitycli/
+*.docx
+*.xlsx
+*.pptx
+*.png
+*.jpg
+*.jpeg
+~$*
+crear_presentacion_finanzas*.py
+Skills/
