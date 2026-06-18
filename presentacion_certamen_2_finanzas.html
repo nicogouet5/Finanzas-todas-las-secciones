@@ -1199,17 +1199,20 @@ b,strong{color:#fff}
           <!-- trayectoria aleatoria -->
           <polyline points="54,88 70,104 82,70 94,115 105,82 115,128 124,144 133,88 145,110 155,72 163,98 172,55 180,80 190,28 198,88 210,105 220,78 228,115 238,90 246,62 253,100 262,144 270,88 283,110 295,68 308,105 320,80 332,48 342,88"
             fill="none" stroke="#22e8e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- intervención en LS: vende inversión, vuelve a Z* -->
+          <!-- intervención en LS: sobreliquidez → invierte (caja baja a Z*) -->
           <circle cx="190" cy="28" r="5" fill="none" stroke="#2bff88" stroke-width="1.8"/>
           <line x1="190" y1="33" x2="190" y2="83" stroke="#2bff88" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-g)"/>
-          <text x="196" y="58" fill="#2bff88" font-size="8.5">vende inv.</text>
-          <!-- intervenciones en LI: compra inversión, vuelve a Z* -->
+          <text x="196" y="52" fill="#2bff88" font-size="8.5">invierte</text>
+          <text x="196" y="63" fill="#2bff88" font-size="8.5">(↓ caja)</text>
+          <!-- intervenciones en LI: falta liquidez → vende inversión (caja sube a Z*) -->
           <circle cx="124" cy="144" r="5" fill="none" stroke="#ff5d72" stroke-width="1.8"/>
           <line x1="124" y1="139" x2="124" y2="93" stroke="#ff5d72" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-r)"/>
-          <text x="128" y="120" fill="#ff5d72" font-size="8.5">compra inv.</text>
+          <text x="130" y="118" fill="#ff5d72" font-size="8.5">vende inv.</text>
+          <text x="130" y="129" fill="#ff5d72" font-size="8.5">(↑ caja)</text>
           <circle cx="262" cy="144" r="5" fill="none" stroke="#ff5d72" stroke-width="1.8"/>
           <line x1="262" y1="139" x2="262" y2="93" stroke="#ff5d72" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-r)"/>
-          <text x="266" y="120" fill="#ff5d72" font-size="8.5">compra inv.</text>
+          <text x="268" y="118" fill="#ff5d72" font-size="8.5">vende inv.</text>
+          <text x="268" y="129" fill="#ff5d72" font-size="8.5">(↑ caja)</text>
           <text x="368" y="158" fill="rgba(255,255,255,.4)" font-size="10" font-family="Georgia,serif" font-style="italic">t</text>
           <text x="20" y="90" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9" transform="rotate(-90,20,90)">Nivel de caja</text>
         </svg>
