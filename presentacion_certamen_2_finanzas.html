@@ -1243,26 +1243,47 @@ b,strong{color:#fff}
   <h2 class="st"><span class="hlp">Sartoris-Hill</span> — ¿conviene otorgar crédito?</h2>
   <div class="g2" style="gap:20px;margin-top:6px">
     <div>
-      <p class="lead" style="font-size:13.3px;margin-bottom:10px">Compara el <strong>VPN de vender</strong> bajo cada política. Cada venta a crédito se cobra <strong>después</strong> (se descuenta), puede tener <strong style="color:var(--red-l)">incobrables</strong>, pero puede traer <strong style="color:var(--green)">más volumen</strong>. La decisión: ¿el mayor volumen compensa el costo de financiar la cobranza?</p>
+      <p class="lead" style="font-size:13px;margin-bottom:10px">Los clientes se dividen en dos grupos: los que <strong style="color:var(--amber)">se acogen al descuento</strong> (pagan antes, a precio menor) y los que <strong style="color:var(--cyan)">no se acogen</strong> (pagan el plazo completo, precio lleno). Ambos grupos pueden tener <strong style="color:var(--red-l)">incobrables</strong>. La decisión: ¿el mayor volumen compensa el costo del tiempo y el descuento cedido?</p>
       <div class="feq p" style="margin-bottom:10px">
-        <div class="lbl">VPN de una política de venta</div>
-        <div class="eq" style="font-size:14px">VPN = <span class="fr" style="font-size:13px"><span class="n"><span class="vg">Ventas</span> · (1 − <span class="vr">incob.</span>)</span><span class="d">(1 + <span class="vc">i</span>)<sup>días</sup></span></span> − <span class="vy">Costos</span></div>
-        <div style="font-size:11px;color:var(--gray);margin-top:6px"><i>i</i> = tasa DIARIA · "días" = plazo de cobro</div>
+        <div class="lbl">VPN con descuento por pronto pago</div>
+        <div style="font-size:11.5px;margin:8px 0 5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:10px;background:rgba(255,176,0,.15);color:var(--amber);font-weight:700;padding:2px 6px;border-radius:4px">α — se acoge</span>
+          <span class="fr" style="font-size:11px"><span class="n">α · Vtas · (1 − <span style="color:var(--amber)">desc</span>)</span><span class="d">(1 + i)<sup>d₁</sup></span></span>
+          <span style="color:var(--gray);font-size:14px">+</span>
+          <span style="font-size:10px;background:rgba(0,229,255,.12);color:var(--cyan);font-weight:700;padding:2px 6px;border-radius:4px">(1−α) — no se acoge</span>
+          <span class="fr" style="font-size:11px"><span class="n">(1−α) · Vtas</span><span class="d">(1 + i)<sup>d₂</sup></span></span>
+        </div>
+        <div class="eq" style="font-size:13px;margin-top:6px">
+          VPN = &nbsp;( <span style="color:var(--amber)">Ing<sub>α</sub></span> + <span style="color:var(--cyan)">Ing<sub>1−α</sub></span> ) · (1 − <span class="vr">incob.</span>) − <span class="vy">Costos</span>
+        </div>
+        <div style="font-size:10.5px;color:var(--gray);margin-top:8px;line-height:1.75">
+          <b style="color:var(--amber)">α</b> = fracción que paga temprano &nbsp;·&nbsp; <b style="color:var(--amber)">desc</b> = tasa de descuento &nbsp;·&nbsp; <b>d₁</b> = días pronto pago<br>
+          <b style="color:var(--cyan)">(1−α)</b> = fracción que paga tarde &nbsp;·&nbsp; <b>d₂</b> = días plazo completo &nbsp;·&nbsp; <b>i</b> = tasa diaria
+        </div>
       </div>
-      <div class="tip"><div style="font-size:17px">⚖️</div><div>Beneficio incremental (más ventas) <strong>vs</strong> costo incremental (descuento por tiempo + incobrables). Elige la política con <strong>mayor VPN</strong>.</div></div>
+      <div class="tip"><div style="font-size:17px">⚖️</div><div>La <span style="color:var(--amber)">pérdida por descuento</span> + el <span style="color:var(--gray-l)">costo del tiempo</span> + los <span style="color:var(--red-l)">incobrables</span> deben ser menores que la <span style="color:var(--green)">ganancia por mayor volumen</span>.</div></div>
     </div>
     <div>
       <div class="card card-p" style="margin-bottom:10px">
         <div style="font-size:10px;color:var(--pink-l);font-weight:700;letter-spacing:1.5px;margin-bottom:7px">EJERCICIO — Comercial Sur</div>
-        <p style="font-size:12.2px;color:var(--gray-l);line-height:1.6">Vende <strong>$200 MM al contado</strong>, costo = 80% de ventas (margen 20%). Evalúa dar <strong>crédito a 30 días</strong>: las ventas subirían a <strong>$280 MM</strong>, con <strong style="color:var(--red-l)">3% incobrable</strong>. Tasa diaria <span class="kc">i = 0,05%</span>. ¿Conviene?</p>
+        <p style="font-size:12px;color:var(--gray-l);line-height:1.6">Vende <strong>$200 MM al contado</strong>, costo = 80% (margen 20%). Evalúa crédito: ventas suben a <strong>$280 MM</strong>, <strong style="color:var(--red-l)">3% incobrable</strong>, <span class="kc">i = 0,05%</span> diario. Condición de pago: <strong style="color:var(--amber)">60% paga a 10 días con 2% de descuento</strong>; <strong style="color:var(--cyan)">40% paga a 30 días</strong> sin descuento. ¿Conviene?</p>
       </div>
       <button class="reveal-btn p" id="revS" onclick="reveal('solS','revS')">👁 Ver solución</button>
       <div class="solution" id="solS">
         <div class="card" style="margin-top:11px;background:rgba(255,67,214,.04)">
           <div class="step"><div class="sn p">A</div><div class="sc"><div class="stit">VPN actual (contado)</div><div class="scal p">200 − 0,80×200 = <b style="color:var(--green)">$40 MM</b></div></div></div>
-          <div class="step"><div class="sn p">B</div><div class="sc"><div class="stit">VPN con crédito 30 días</div><div class="scal p">Cobranza: 280×0,97 = 271,6 → /(1,0005)³⁰ = 271,6/1,01511 = 267,6<br>Costo hoy: 0,80×280 = 224<br>VPN = 267,6 − 224 = <b style="color:var(--green)">$43,6 MM</b></div></div></div>
-          <div class="step"><div class="sn p">C</div><div class="sc"><div class="stit">Decisión</div><div class="scal p">43,6 &gt; 40 → <b style="color:var(--green)">SÍ conviene</b> (por poco)</div></div></div>
-          <div class="trap" style="margin-top:6px"><div class="ti">⚠️</div><div><strong>Sensibilidad / trampa:</strong> si la incobrabilidad fuera <strong>6%</strong>, el VPN con crédito cae a ≈ $35,3 MM &lt; 40 → ya <strong style="color:var(--red-l)">NO conviene</strong>. Más ventas no siempre justifican el crédito: depende del incobrable y del plazo.</div></div>
+          <div class="step"><div class="sn p">B</div><div class="sc"><div class="stit">Ingresos VPN con crédito</div><div class="scal p">
+            <span style="color:var(--amber)">Grupo α (60% → $168 MM, desc 2%, día 10):</span><br>
+            168 × 0,98 / (1,0005)<sup>10</sup> = 164,64 / 1,00501 = <b>163,8 MM</b><br>
+            <span style="color:var(--cyan)">Grupo (1−α) (40% → $112 MM, día 30):</span><br>
+            112 / (1,0005)<sup>30</sup> = 112 / 1,01511 = <b>110,3 MM</b><br>
+            Suma bruta: 163,8 + 110,3 = 274,1 MM<br>
+            Neto incobrables (3%): 274,1 × 0,97 = <b>265,9 MM</b><br>
+            Costo hoy: 0,80 × 280 = 224 MM<br>
+            VPN = 265,9 − 224 = <b style="color:var(--green)">$41,9 MM</b>
+          </div></div></div>
+          <div class="step"><div class="sn p">C</div><div class="sc"><div class="stit">Decisión</div><div class="scal p">41,9 &gt; 40 → <b style="color:var(--green)">SÍ conviene</b> (el descuento reduce el beneficio vs. crédito sin descuento: $43,6 → $41,9 MM)</div></div></div>
+          <div class="trap" style="margin-top:6px"><div class="ti">⚠️</div><div><strong>Trampa:</strong> si el descuento fuera <strong>5%</strong>, el VPN baja a ≈ $37,1 MM &lt; 40 → <strong style="color:var(--red-l)">NO conviene</strong>. Más volumen no siempre gana: depende del descuento cedido, el plazo y el incobrable.</div></div>
         </div>
       </div>
     </div>
