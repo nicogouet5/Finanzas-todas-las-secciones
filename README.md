@@ -25,7 +25,7 @@ Después de vincular el proyecto y crear un Blob público en Vercel, carga las c
 ```bash
 vercel link
 vercel env pull .env.local
-node scripts/seed-blob.mjs
+node --env-file=.env.local scripts/seed-blob.mjs
 vercel --prod --yes
 ```
 
