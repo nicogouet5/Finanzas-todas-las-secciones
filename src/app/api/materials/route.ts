@@ -1,6 +1,6 @@
 import { BlobPreconditionFailedError, copy, del, list, put } from "@vercel/blob";
 import { isAdmin } from "@/lib/admin-session";
-import { isCourse, validateMaterialPath } from "@/lib/admin-materials";
+import { FOLDER_MARKER, isCourse, validateMaterialPath } from "@/lib/admin-materials";
 import { normalizeMaterialPath } from "@/lib/material-paths";
 
 const json = (error: string, status: number) => Response.json({ error }, { status });
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   if (!await isAdmin()) return json("No autorizado", 401);
   let pathname: string;
   try { const data = await body(request); if (typeof data.course !== "string" || typeof data.folder !== "string" || !isCourse(data.course)) return json("Solicitud inválida", 400); pathname = `materiales/${data.course}/${normalizeMaterialPath(data.folder)}/.folder`; } catch { return json("Solicitud inválida", 400); }
-  try { await put(pathname, "", { access: "public", addRandomSuffix: false, allowOverwrite: false }); return Response.json({ ok: true }); }
+  try { await put(pathname, FOLDER_MARKER, { access: "public", addRandomSuffix: false, allowOverwrite: false }); return Response.json({ ok: true }); }
   catch (error) { return error instanceof BlobPreconditionFailedError ? json("Ya existe", 409) : json("Servicio de archivos no disponible", 503); }
 }
 
