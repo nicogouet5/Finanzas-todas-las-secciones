@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { introCanvasSize } from "@/lib/ascii-intro-config";
+import { introCanvasSize, introCellSize } from "@/lib/ascii-intro-config";
 import { canScheduleFrame, drawAsciiFrame, settledFrameTime, shouldDrawFrame } from "@/lib/ascii-renderer";
 
 function fallbackSource() {
@@ -35,11 +35,17 @@ export function AsciiBackground() {
     let reducedMotion = motionQuery.matches;
     let active = true;
     let paused = document.hidden;
+    let cellSize = introCellSize(window.innerWidth);
     const render = (time: number) => {
       if (!active || paused || !sourceRef.current) return;
       if (!reducedMotion && !shouldDrawFrame(lastFrameRef.current, time)) return;
       if (startedAtRef.current === null) startedAtRef.current = time;
-      drawAsciiFrame(context, sourceRef.current, canvas.width, canvas.height, settledFrameTime(time - startedAtRef.current, reducedMotion));
+      drawAsciiFrame(context, sourceRef.current, canvas.width, canvas.height, settledFrameTime(time - startedAtRef.current, reducedMotion), {
+        cellSize,
+        contrast: 115,
+        tintOpacity: 0.32,
+        animationIntensity: 0.6,
+      });
       lastFrameRef.current = time;
     };
     const schedule = () => {
@@ -52,6 +58,7 @@ export function AsciiBackground() {
     };
     const resize = () => {
       const size = introCanvasSize(window.innerWidth, window.innerHeight, window.devicePixelRatio);
+      cellSize = introCellSize(window.innerWidth);
       canvas.width = size.width;
       canvas.height = size.height;
       lastFrameRef.current = -Infinity;

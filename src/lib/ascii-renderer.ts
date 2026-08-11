@@ -62,6 +62,16 @@ export function settledFrameTime(time: number, reducedMotion: boolean) {
   return reducedMotion ? 900 : time;
 }
 
+export function coverDrawRect(sourceWidth: number, sourceHeight: number, width: number, height: number) {
+  if (sourceWidth <= 0 || sourceHeight <= 0 || width <= 0 || height <= 0) {
+    return { x: 0, y: 0, width, height };
+  }
+  const scale = Math.max(width / sourceWidth, height / sourceHeight);
+  const drawWidth = sourceWidth * scale;
+  const drawHeight = sourceHeight * scale;
+  return { x: (width - drawWidth) / 2, y: (height - drawHeight) / 2, width: drawWidth, height: drawHeight };
+}
+
 function scanStrength(x: number, y: number, time: number) {
   const band = (x * 0.85 + y * 0.45 + time * 0.026) % 58;
   return Math.max(0, 1 - Math.abs(band - 29) / 10);
@@ -83,7 +93,12 @@ export function drawAsciiFrame(
   const sampleContext = sample.getContext("2d");
   if (!sampleContext) return;
 
-  sampleContext.drawImage(source, 0, 0, sample.width, sample.height);
+  const sourceDimensions = source as CanvasImageSource & { naturalWidth?: number; naturalHeight?: number; videoWidth?: number; videoHeight?: number; width?: number; height?: number };
+  const sourceWidth = sourceDimensions.naturalWidth || sourceDimensions.videoWidth || sourceDimensions.width || sample.width;
+  const sourceHeight = sourceDimensions.naturalHeight || sourceDimensions.videoHeight || sourceDimensions.height || sample.height;
+  const sourceRect = coverDrawRect(sourceWidth, sourceHeight, sample.width, sample.height);
+  sampleContext.clearRect(0, 0, sample.width, sample.height);
+  sampleContext.drawImage(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
   const pixels = sampleContext.getImageData(0, 0, sample.width, sample.height).data;
   const bloomContext = bloom.getContext("2d");
   if (!bloomContext) return;

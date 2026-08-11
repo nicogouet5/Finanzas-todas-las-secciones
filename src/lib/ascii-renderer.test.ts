@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { canScheduleFrame, dotRadius, financialGlyph, luminance, settledFrameTime, shouldDrawFrame } from "./ascii-renderer.ts";
+import { introCellSize } from "./ascii-intro-config.ts";
+import { canScheduleFrame, coverDrawRect, dotRadius, financialGlyph, luminance, settledFrameTime, shouldDrawFrame } from "./ascii-renderer.ts";
 
 test("luminancia usa pesos perceptuales", () => {
   assert.ok(luminance(255, 255, 255) > luminance(0, 0, 0));
@@ -37,4 +38,16 @@ test("el campo no agenda un segundo frame mientras uno sigue pendiente", () => {
 test("reduced motion dibuja el campo ya estabilizado", () => {
   assert.equal(settledFrameTime(0, false), 0);
   assert.equal(settledFrameTime(0, true), 900);
+});
+
+test("móvil usa celdas más finas para conservar detalle", () => {
+  assert.equal(introCellSize(390), 8);
+  assert.equal(introCellSize(1024), 10);
+});
+
+test("la fuente conserva proporción al cubrir un viewport vertical", () => {
+  const rect = coverDrawRect(1536, 864, 39, 84);
+  assert.ok(rect.width > 39);
+  assert.equal(Math.round(rect.height), 84);
+  assert.ok(rect.x < 0);
 });
