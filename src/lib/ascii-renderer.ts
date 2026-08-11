@@ -12,7 +12,9 @@ const defaultConfig: AsciiConfig = {
   animationIntensity: 0.6,
 };
 
-const tint = [255, 59, 31] as const;
+const tint = [255, 76, 123] as const;
+const signal = [199, 255, 61] as const;
+const financialGlyphs = "$%01+−";
 type RendererBuffers = { sample: HTMLCanvasElement; bloom: HTMLCanvasElement };
 const buffers = new WeakMap<CanvasRenderingContext2D, RendererBuffers>();
 
@@ -43,6 +45,28 @@ export function dotRadius(luma: number, phase: number, config: AsciiConfig) {
   return Math.min(config.cellSize / 2, Math.max(0, contrasted * (config.cellSize / 2) * pulse));
 }
 
+export function financialGlyph(luma: number, x: number, y: number, time: number) {
+  if (luma < 0.4) return null;
+  return financialGlyphs[Math.abs(Math.floor(x * 17 + y * 13 + time / 120)) % financialGlyphs.length];
+}
+
+export function shouldDrawFrame(lastFrame: number, time: number) {
+  return time - lastFrame >= 1000 / 30;
+}
+
+export function canScheduleFrame(framePending: boolean, reducedMotion: boolean, paused: boolean) {
+  return !framePending && !reducedMotion && !paused;
+}
+
+export function settledFrameTime(time: number, reducedMotion: boolean) {
+  return reducedMotion ? 900 : time;
+}
+
+function scanStrength(x: number, y: number, time: number) {
+  const band = (x * 0.85 + y * 0.45 + time * 0.026) % 58;
+  return Math.max(0, 1 - Math.abs(band - 29) / 10);
+}
+
 export function drawAsciiFrame(
   context: CanvasRenderingContext2D,
   source: CanvasImageSource,
@@ -66,20 +90,30 @@ export function drawAsciiFrame(
 
   context.clearRect(0, 0, width, height);
   bloomContext.clearRect(0, 0, width, height);
+  bloomContext.font = `${Math.floor(config.cellSize * 1.18)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+  bloomContext.textAlign = "center";
+  bloomContext.textBaseline = "middle";
+  const boot = Math.min(1, time / 900);
   for (let y = 0; y < sample.height; y += 1) {
     for (let x = 0; x < sample.width; x += 1) {
       const offset = (y * sample.width + x) * 4;
       const red = pixels[offset];
       const green = pixels[offset + 1];
       const blue = pixels[offset + 2];
-      const radius = dotRadius(luminance(red, green, blue), time / 1000 + x * 0.16 + y * 0.12, config);
+      const luma = luminance(red, green, blue);
+      const radius = dotRadius(luma, time / 1000 + x * 0.16 + y * 0.12, config) * boot;
       if (radius === 0) continue;
-
-      const color = tint.map((channel, index) => pixels[offset + index] * (1 - config.tintOpacity) + channel * config.tintOpacity);
+      const scan = scanStrength(x, y, time);
+      const accent = tint.map((channel, index) => channel * (1 - scan) + signal[index] * scan);
+      const color = accent.map((channel, index) => pixels[offset + index] * (1 - config.tintOpacity) + channel * config.tintOpacity);
       bloomContext.fillStyle = `rgb(${color.join(",")})`;
-      bloomContext.beginPath();
-      bloomContext.arc(x * config.cellSize + config.cellSize / 2, y * config.cellSize + config.cellSize / 2, radius, 0, Math.PI * 2);
-      bloomContext.fill();
+      const glyph = financialGlyph(luma, x, y, time);
+      if (glyph) bloomContext.fillText(glyph, x * config.cellSize + config.cellSize / 2, y * config.cellSize + config.cellSize / 2);
+      else {
+        bloomContext.beginPath();
+        bloomContext.arc(x * config.cellSize + config.cellSize / 2, y * config.cellSize + config.cellSize / 2, radius, 0, Math.PI * 2);
+        bloomContext.fill();
+      }
     }
   }
 

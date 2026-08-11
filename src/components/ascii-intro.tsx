@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { introCanvasSize } from "@/lib/ascii-intro-config";
-import { drawAsciiFrame } from "@/lib/ascii-renderer";
+import { canScheduleFrame, drawAsciiFrame, settledFrameTime, shouldDrawFrame } from "@/lib/ascii-renderer";
 
 function fallbackSource() {
   const canvas = document.createElement("canvas");
@@ -23,40 +23,81 @@ export function AsciiBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sourceRef = useRef<CanvasImageSource | null>(null);
   const frameRef = useRef<number | undefined>(undefined);
+  const lastFrameRef = useRef(-Infinity);
+  const startedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
     if (!canvas || !context) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = motionQuery.matches;
+    let active = true;
+    let paused = document.hidden;
+    const render = (time: number) => {
+      if (!active || paused || !sourceRef.current) return;
+      if (!reducedMotion && !shouldDrawFrame(lastFrameRef.current, time)) return;
+      if (startedAtRef.current === null) startedAtRef.current = time;
+      drawAsciiFrame(context, sourceRef.current, canvas.width, canvas.height, settledFrameTime(time - startedAtRef.current, reducedMotion));
+      lastFrameRef.current = time;
+    };
+    const schedule = () => {
+      if (!canScheduleFrame(frameRef.current !== undefined, reducedMotion, paused)) return;
+      frameRef.current = requestAnimationFrame((time) => {
+        frameRef.current = undefined;
+        render(time);
+        schedule();
+      });
+    };
     const resize = () => {
       const size = introCanvasSize(window.innerWidth, window.innerHeight, window.devicePixelRatio);
       canvas.width = size.width;
       canvas.height = size.height;
-      if (sourceRef.current) drawAsciiFrame(context, sourceRef.current, canvas.width, canvas.height, performance.now());
+      lastFrameRef.current = -Infinity;
+      render(performance.now());
+      schedule();
+    };
+    sourceRef.current = fallbackSource();
+    const image = new Image();
+    image.onload = () => { sourceRef.current = image; lastFrameRef.current = -Infinity; render(performance.now()); schedule(); };
+    image.onerror = () => { sourceRef.current = fallbackSource(); };
+    image.src = "/ascii-sunset.webp";
+    const onVisibilityChange = () => {
+      paused = document.hidden;
+      if (paused && frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = undefined;
+      }
+      if (!paused) {
+        lastFrameRef.current = -Infinity;
+        render(performance.now());
+        schedule();
+      }
+    };
+    const onMotionChange = (event: MediaQueryListEvent) => {
+      reducedMotion = event.matches;
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = undefined;
+      }
+      lastFrameRef.current = -Infinity;
+      render(performance.now());
+      schedule();
     };
     resize();
     window.addEventListener("resize", resize);
-    sourceRef.current = fallbackSource();
-    const image = new Image();
-    image.onload = () => { sourceRef.current = image; };
-    image.onerror = () => { sourceRef.current = fallbackSource(); };
-    image.src = "/ascii-sunset.webp";
-
-    const draw = (time: number) => {
-      if (!sourceRef.current) return;
-      drawAsciiFrame(context, sourceRef.current, canvas.width, canvas.height, time);
-      if (!reducedMotion) frameRef.current = requestAnimationFrame(draw);
-    };
-    draw(0);
-    if (!reducedMotion) frameRef.current = requestAnimationFrame(draw);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    motionQuery.addEventListener("change", onMotionChange);
 
     return () => {
+      active = false;
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
       image.onload = null;
       image.onerror = null;
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      motionQuery.removeEventListener("change", onMotionChange);
     };
   }, []);
 
