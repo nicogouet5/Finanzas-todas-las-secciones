@@ -109,3 +109,25 @@ export function buildMaterialTree(items: MaterialItem[]): FolderNode {
 export async function findMaterial(path: string): Promise<MaterialItem | null> {
   return (await listMaterials()).find((item) => item.path === path) ?? null;
 }
+
+export function buildMaterialFolders(items: MaterialItem[], marked: string[] = []): string[] {
+  const folders = new Set(marked);
+  for (const item of items) {
+    const parts = item.path.split("/");
+    for (let index = 2; index < parts.length; index++) folders.add(parts.slice(0, index).join("/"));
+  }
+  return [...folders].sort((a, b) => a.localeCompare(b, "es"));
+}
+
+export async function listMaterialFolders(items: MaterialItem[]): Promise<string[]> {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return buildMaterialFolders(items);
+  const marked: string[] = [];
+  let cursor: string | undefined;
+  do {
+    const result = await list({ prefix: "materiales/", cursor });
+    for (const blob of result.blobs) if (blob.pathname.endsWith("/.folder")) marked.push(blob.pathname.slice("materiales/".length, -"/.folder".length));
+    cursor = result.cursor;
+    if (!result.hasMore) break;
+  } while (cursor);
+  return buildMaterialFolders(items, marked);
+}
