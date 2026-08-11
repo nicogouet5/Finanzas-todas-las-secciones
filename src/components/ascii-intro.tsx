@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { INTRO_DURATION, introCanvasSize } from "@/lib/ascii-intro-config";
 import { drawAsciiFrame } from "@/lib/ascii-renderer";
 
 const INTRO_KEY = "hub-ascii-intro-seen";
-const INTRO_DURATION = 5500;
 const EXIT_DURATION = 220;
 
 function fallbackSource() {
@@ -56,9 +56,9 @@ export function AsciiIntro() {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const resize = () => {
-      const scale = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.ceil(window.innerWidth * scale);
-      canvas.height = Math.ceil(window.innerHeight * scale);
+      const size = introCanvasSize(window.innerWidth, window.innerHeight, window.devicePixelRatio);
+      canvas.width = size.width;
+      canvas.height = size.height;
     };
     resize();
     window.addEventListener("resize", resize);
@@ -93,6 +93,6 @@ export function AsciiIntro() {
 
   return <div className={`ascii-intro${exiting ? " ascii-intro--exit" : ""}`} role="presentation">
     <canvas ref={canvasRef} aria-hidden="true" />
-    <button className="ascii-intro__skip" type="button" onClick={finish} aria-label="Saltar introducción">Saltar intro</button>
+    <button autoFocus className="ascii-intro__skip" type="button" onClick={finish} aria-label="Saltar introducción">Saltar intro</button>
   </div>;
 }

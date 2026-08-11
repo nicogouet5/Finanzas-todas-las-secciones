@@ -13,6 +13,25 @@ const defaultConfig: AsciiConfig = {
 };
 
 const tint = [255, 59, 31] as const;
+type RendererBuffers = { sample: HTMLCanvasElement; bloom: HTMLCanvasElement };
+const buffers = new WeakMap<CanvasRenderingContext2D, RendererBuffers>();
+
+function rendererBuffers(context: CanvasRenderingContext2D, width: number, height: number, sampleWidth: number, sampleHeight: number) {
+  let current = buffers.get(context);
+  if (!current) {
+    current = { sample: document.createElement("canvas"), bloom: document.createElement("canvas") };
+    buffers.set(context, current);
+  }
+  if (current.sample.width !== sampleWidth || current.sample.height !== sampleHeight) {
+    current.sample.width = sampleWidth;
+    current.sample.height = sampleHeight;
+  }
+  if (current.bloom.width !== width || current.bloom.height !== height) {
+    current.bloom.width = width;
+    current.bloom.height = height;
+  }
+  return current;
+}
 
 export function luminance(red: number, green: number, blue: number) {
   return (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
@@ -34,21 +53,19 @@ export function drawAsciiFrame(
 ) {
   if (width <= 0 || height <= 0) return;
 
-  const sample = document.createElement("canvas");
-  sample.width = Math.ceil(width / config.cellSize);
-  sample.height = Math.ceil(height / config.cellSize);
+  const sampleWidth = Math.ceil(width / config.cellSize);
+  const sampleHeight = Math.ceil(height / config.cellSize);
+  const { sample, bloom } = rendererBuffers(context, width, height, sampleWidth, sampleHeight);
   const sampleContext = sample.getContext("2d");
   if (!sampleContext) return;
 
   sampleContext.drawImage(source, 0, 0, sample.width, sample.height);
   const pixels = sampleContext.getImageData(0, 0, sample.width, sample.height).data;
-  const bloom = document.createElement("canvas");
-  bloom.width = width;
-  bloom.height = height;
   const bloomContext = bloom.getContext("2d");
   if (!bloomContext) return;
 
   context.clearRect(0, 0, width, height);
+  bloomContext.clearRect(0, 0, width, height);
   for (let y = 0; y < sample.height; y += 1) {
     for (let x = 0; x < sample.width; x += 1) {
       const offset = (y * sample.width + x) * 4;
