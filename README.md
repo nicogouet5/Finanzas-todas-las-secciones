@@ -30,3 +30,8 @@ vercel --prod --yes
 ```
 
 El seed no sobrescribe: informa `skipped existing` si la ruta ya existe. La URL pública será `.vercel.app`. Un dominio `.dev` requiere compra y configuración DNS por separado.
+
+## Assets visuales
+
+- `public/ascii-sunset.webp` proviene de `https://21st.dev/ascii-editor/demos/generated/ref-046.webp` y se renderiza localmente con Canvas2D.
+- `public/udd-logo-white.png` usa el PNG blanco oficial de UDD (`https://www.udd.cl/dircom/web/udd/UDD-blanco.png`), como reemplazo verificable del adjunto que no estaba disponible al preparar el worktree.
