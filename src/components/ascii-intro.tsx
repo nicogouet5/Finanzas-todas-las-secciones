@@ -1,11 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { INTRO_DURATION, introCanvasSize } from "@/lib/ascii-intro-config";
+import { useEffect, useRef } from "react";
+import { introCanvasSize } from "@/lib/ascii-intro-config";
 import { drawAsciiFrame } from "@/lib/ascii-renderer";
-
-const INTRO_KEY = "hub-ascii-intro-seen";
-const EXIT_DURATION = 220;
 
 function fallbackSource() {
   const canvas = document.createElement("canvas");
@@ -22,43 +19,22 @@ function fallbackSource() {
   return canvas;
 }
 
-export function AsciiIntro() {
+export function AsciiBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sourceRef = useRef<CanvasImageSource | null>(null);
   const frameRef = useRef<number | undefined>(undefined);
-  const completionRef = useRef<number | undefined>(undefined);
-  const exitRef = useRef<number | undefined>(undefined);
-  const finishingRef = useRef(false);
-  const [visible, setVisible] = useState(false);
-  const [exiting, setExiting] = useState(false);
-
-  const finish = useCallback(() => {
-    if (finishingRef.current) return;
-    finishingRef.current = true;
-    sessionStorage.setItem(INTRO_KEY, "true");
-    if (frameRef.current) cancelAnimationFrame(frameRef.current);
-    if (completionRef.current) clearTimeout(completionRef.current);
-    setExiting(true);
-    exitRef.current = window.setTimeout(() => setVisible(false), EXIT_DURATION);
-  }, []);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || sessionStorage.getItem(INTRO_KEY)) return;
-    setVisible(true);
-  }, []);
-
-  useEffect(() => {
-    if (!visible) return;
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
     if (!canvas || !context) return;
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const resize = () => {
       const size = introCanvasSize(window.innerWidth, window.innerHeight, window.devicePixelRatio);
       canvas.width = size.width;
       canvas.height = size.height;
+      if (sourceRef.current) drawAsciiFrame(context, sourceRef.current, canvas.width, canvas.height, performance.now());
     };
     resize();
     window.addEventListener("resize", resize);
@@ -68,31 +44,21 @@ export function AsciiIntro() {
     image.onerror = () => { sourceRef.current = fallbackSource(); };
     image.src = "/ascii-sunset.webp";
 
-    let active = true;
     const draw = (time: number) => {
-      if (!active || !sourceRef.current) return;
+      if (!sourceRef.current) return;
       drawAsciiFrame(context, sourceRef.current, canvas.width, canvas.height, time);
-      frameRef.current = requestAnimationFrame(draw);
+      if (!reducedMotion) frameRef.current = requestAnimationFrame(draw);
     };
-    frameRef.current = requestAnimationFrame(draw);
-    completionRef.current = window.setTimeout(finish, INTRO_DURATION);
+    draw(0);
+    if (!reducedMotion) frameRef.current = requestAnimationFrame(draw);
 
     return () => {
-      active = false;
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
-      if (completionRef.current) clearTimeout(completionRef.current);
-      if (exitRef.current) clearTimeout(exitRef.current);
       image.onload = null;
       image.onerror = null;
       window.removeEventListener("resize", resize);
-      document.body.style.overflow = previousOverflow;
     };
-  }, [finish, visible]);
+  }, []);
 
-  if (!visible) return null;
-
-  return <div className={`ascii-intro${exiting ? " ascii-intro--exit" : ""}`} role="presentation">
-    <canvas ref={canvasRef} aria-hidden="true" />
-    <button autoFocus className="ascii-intro__skip" type="button" onClick={finish} aria-label="Saltar introducción">Saltar intro</button>
-  </div>;
+  return <div className="ascii-background" aria-hidden="true"><canvas ref={canvasRef} /></div>;
 }

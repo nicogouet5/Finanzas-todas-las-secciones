@@ -1,5 +1,3 @@
-export const INTRO_DURATION = 5500;
-
 const MAX_OUTPUT_WIDTH = 640;
 const OUTPUT_SCALE = 0.35;
 
