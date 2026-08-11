@@ -11,3 +11,9 @@
 ~$*
 crear_presentacion_finanzas*.py
 Skills/
+
+node_modules/
+.next/
+.env*
+!.env.example
+*.tsbuildinfo
