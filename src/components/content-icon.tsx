@@ -1,18 +1,9 @@
 import type { ReactNode } from "react";
+import type { FileIconKind } from "@/lib/content-kind";
 
-export type FileIconKind = "pdf" | "doc" | "ppt" | "image" | "audio" | "video" | "archive" | "html" | "other";
-
-export function iconKindForContentType(contentType: string): FileIconKind {
-  if (contentType === "application/pdf") return "pdf";
-  if (contentType === "text/html") return "html";
-  if (contentType.startsWith("image/")) return "image";
-  if (contentType.startsWith("audio/")) return "audio";
-  if (contentType.startsWith("video/")) return "video";
-  if (contentType.includes("zip")) return "archive";
-  if (contentType.includes("word") || contentType.includes("opendocument.text")) return "doc";
-  if (contentType.includes("powerpoint") || contentType.includes("presentation")) return "ppt";
-  return "other";
-}
+// La clasificación vive en @/lib/content-kind para compartirla con la búsqueda.
+// Se reexporta aquí porque varios componentes ya la importaban desde este módulo.
+export { iconKindForContentType, type FileIconKind } from "@/lib/content-kind";
 
 const FILE_ICON_PATHS: Record<FileIconKind, ReactNode> = {
   pdf: <><path d="M6 3h8l4 4v14H6V3Z" /><path d="M14 3v5h5M8.5 13v4M8.5 13h1.25a1.25 1.25 0 1 1 0 2.5H8.5M12.5 13v4M12.5 15h1M15.5 13v4M15.5 13h1.25" /></>,

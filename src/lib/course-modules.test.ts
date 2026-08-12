@@ -3,7 +3,7 @@ import test from "node:test";
 import { mergeUnassigned, reorderBy } from "./course-modules.ts";
 import type { MaterialItem } from "./materials.ts";
 
-const item = (path: string): MaterialItem => ({ path, name: path.split("/").at(-1) ?? path, url: path, downloadUrl: path, size: 1, contentType: "text/html", source: "local" });
+const item = (path: string): MaterialItem => ({ path, name: path.split("/").at(-1) ?? path, url: path, downloadUrl: path, size: 1, contentType: "text/html", uploadedAt: null, source: "local" });
 
 test("calcula archivos sin módulo a partir de referencias existentes", () => {
   const items = [item("finanzas/caja/clase.html"), item("finanzas/caja/guia.pdf")];

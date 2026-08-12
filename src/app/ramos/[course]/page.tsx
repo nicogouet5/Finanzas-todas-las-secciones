@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { MaterialCard } from "@/components/material-card";
+import { MaterialSearch, type ExplorerModule, type SearchIndexItem } from "@/components/material-search";
 import { isCourse } from "@/lib/admin-materials";
 import { listCourseModules } from "@/lib/course-modules";
 import { courseLabel, type CourseSlug } from "@/lib/material-paths";
@@ -15,19 +15,29 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
   const crumbs = [{ href: "/", label: "Inicio" }, { label: courseLabel(course as CourseSlug) }];
   const byPath = new Map(items.map((item) => [item.path, item]));
 
+  const explorerModules: ExplorerModule[] = published.map((module) => ({
+    id: module.id,
+    title: module.title,
+    items: module.items
+      .map((entry) => ({ entry, item: byPath.get(entry.path) }))
+      .filter((row): row is { entry: typeof module.items[number]; item: NonNullable<typeof row.item> } => !!row.item)
+      .map(({ entry, item }) => ({ path: item.path, title: entry.title ?? item.name, item })),
+  }));
+
+  const searchIndex: SearchIndexItem[] = explorerModules.flatMap((module) => module.items.map((entry) => ({
+    path: entry.path,
+    title: entry.title,
+    moduleTitle: module.title,
+    contentType: entry.item.contentType,
+    moduleId: module.id,
+  })));
+
   return <main id="main" className="page">
     <Breadcrumbs items={crumbs} />
+    <span className="eyebrow">// FINANZAS_01</span>
     <h1>{courseLabel(course as CourseSlug)}</h1>
-    {!published.length ? <p className="empty-state">Aún no hay materiales publicados en este ramo.</p> : <div className="module-sections">
-      {published.map((module) => {
-        const files = module.items.map((entry) => ({ entry, item: byPath.get(entry.path) })).filter((row): row is { entry: typeof module.items[number]; item: NonNullable<typeof row.item> } => !!row.item);
-        return <section className="module-section" key={module.id} aria-label={module.title}>
-          <h2>{module.title}</h2>
-          {!files.length ? <p className="empty-state">Aún no hay archivos en este módulo.</p> : <div className="material-grid">
-            {files.map(({ entry, item }) => <MaterialCard item={item} title={entry.title} key={item.path} />)}
-          </div>}
-        </section>;
-      })}
-    </div>}
+    {!published.length
+      ? <p className="empty-state">Aún no hay materiales publicados en este ramo.</p>
+      : <MaterialSearch index={searchIndex} modules={explorerModules} />}
   </main>;
 }

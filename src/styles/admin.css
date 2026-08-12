@@ -1,0 +1,185 @@
+.login-form {
+  display: grid;
+  max-width: 28rem;
+  gap: 1rem;
+}
+
+.login-form label {
+  display: grid;
+  gap: .35rem;
+  font-weight: 700;
+}
+
+.login-form input {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: .4rem;
+  padding: .6rem;
+  color: var(--text);
+  background: var(--surface);
+}
+
+.login-form .button {
+  border: 0;
+  cursor: pointer;
+  justify-content: center;
+}
+
+.admin-form, .create-module-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 34rem;
+  margin: 1.5rem 0;
+}
+
+.admin-form label, .create-module-form label {
+  display: grid;
+  gap: .35rem;
+}
+
+.admin-form input, .admin-form select, .create-module-form input, .upload-input input {
+  min-height: 44px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .4rem;
+  padding: .5rem;
+}
+
+.upload-input {
+  display: grid;
+  gap: .5rem;
+  max-width: 34rem;
+}
+
+.material-card button {
+  min-height: 44px;
+  margin-right: .5rem;
+  border: 1px solid var(--line);
+  border-radius: .4rem;
+  padding: .5rem;
+  color: var(--text);
+  background: var(--surface-hover);
+  cursor: pointer;
+}
+
+.material-card .danger, .danger {
+  color: #fff;
+  background: #8b2635;
+}
+
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-toolbar button {
+  min-height: 44px;
+  padding: .5rem .8rem;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: .4rem;
+  cursor: pointer;
+}
+
+.upload-progress {
+  display: grid;
+  max-width: 34rem;
+  gap: .25rem;
+  margin-top: .75rem;
+}
+
+.upload-progress progress {
+  width: 100%;
+  min-height: 1rem;
+}
+
+.drag-handle {
+  color: var(--muted);
+  cursor: grab;
+  touch-action: none;
+}
+
+.module-card[draggable="true"], .item-row[draggable="true"] {
+  cursor: default;
+}
+
+.drop-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  margin-top: .5rem;
+  border: 2px dashed var(--line);
+  border-radius: .5rem;
+  padding: 1rem;
+  color: var(--muted);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+
+.drop-zone:hover, .drop-zone--active {
+  border-color: var(--accent);
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.drop-zone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.inline-edit__trigger {
+  display: inline-block;
+  max-width: 100%;
+  padding: .2rem .4rem;
+  margin: -.2rem -.4rem;
+  border: 1px solid transparent;
+  border-radius: .35rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.inline-edit__trigger:hover {
+  border-color: var(--line);
+  background: var(--surface-hover);
+}
+
+.inline-edit input {
+  min-height: 36px;
+  width: 100%;
+  color: var(--text);
+  background: var(--surface-hover);
+  border: 1px solid var(--accent);
+  border-radius: .35rem;
+  padding: .2rem .4rem;
+  font: inherit;
+}
+
+.confirm-button {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+}
+
+.confirm-button span {
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+.unassigned-panel {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}

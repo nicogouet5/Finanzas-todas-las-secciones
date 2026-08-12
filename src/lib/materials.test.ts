@@ -11,6 +11,7 @@ test("separa ramos, carpetas y archivos", () => {
       downloadUrl: "/clase.html",
       size: 1,
       contentType: "text/html",
+      uploadedAt: null,
       source: "local",
     },
   ]);
@@ -18,6 +19,6 @@ test("separa ramos, carpetas y archivos", () => {
 });
 
 test("incluye carpetas con archivos y marcadores vacíos", () => {
-  const items = [{ path: "finanzas/caja/clase.html", name: "clase.html", url: "/clase.html", downloadUrl: "/clase.html", size: 1, contentType: "text/html", source: "local" as const }];
+  const items = [{ path: "finanzas/caja/clase.html", name: "clase.html", url: "/clase.html", downloadUrl: "/clase.html", size: 1, contentType: "text/html", uploadedAt: null, source: "local" as const }];
   assert.deepEqual(buildMaterialFolders(items, ["finanzas/vacia"]), ["finanzas/caja", "finanzas/vacia"]);
 });

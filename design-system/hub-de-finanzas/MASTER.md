@@ -8,8 +8,8 @@
 
 **Project:** Hub de Finanzas
 **Generated:** 2026-08-11 12:19:33
-**Category:** Personal Finance Tracker
-**Design Dials:** Variance 7/10 (Balanced / Modern) | Motion 3/10 (Subtle) | Density 5/10 (Standard)
+**Category:** Academic Course Material Hub
+**Design Dials:** Variance 8/10 (Bold / Terminal) | Motion 2/10 (Subtle) | Density 5/10 (Standard)
 
 ---
 
@@ -17,55 +17,46 @@
 
 ### Color Palette
 
-| Role | Hex | CSS Variable |
+| Role | Hex / Value | CSS Variable |
 |------|-----|--------------|
-| Primary | `#1E40AF` | `--color-primary` |
-| On Primary | `#FFFFFF` | `--color-on-primary` |
-| Secondary | `#3B82F6` | `--color-secondary` |
-| Accent/CTA | `#059669` | `--color-accent` |
-| Background | `#0F172A` | `--color-background` |
-| Foreground | `#FFFFFF` | `--color-foreground` |
-| Muted | `#101A34` | `--color-muted` |
-| Border | `rgba(255,255,255,0.08)` | `--color-border` |
-| Destructive | `#DC2626` | `--color-destructive` |
-| Ring | `#1E40AF` | `--color-ring` |
+| Background | `#09070b` | `--bg` |
+| Surface | `#151118` | `--surface` |
+| Surface Hover | `#211720` | `--surface-hover` |
+| Foreground / Text | `#fffafd` | `--text` |
+| Muted | `#c9bcc5` | `--muted` |
+| Line / Border | `#4b3440` | `--line` |
+| Accent (lima) | `#c7ff3d` | `--accent` |
+| Accent Strong (rosa) | `#ff5a84` | `--accent-strong` |
+| Focus Ring | `#dcff70` | `--focus` |
+| Line Soft | `rgba(255,255,255,.12)` | `--line-soft` |
+| Line Soft Strong | `rgba(255,255,255,.14)` | `--line-soft-strong` |
+| Line Soft 18 | `rgba(255,255,255,.18)` | `--line-soft-18` |
 
-**Color Notes:** Trust blue + profit green on dark
+**Color Notes:** Terminal/ASCII aesthetic on a near-black base. Lima green (`#c7ff3d`) is the primary accent for interactive cues, numbers and kickers; hot pink (`#ff5a84`) is the secondary accent for eyebrows, labels and hover states. Body background carries a faint radial pink glow (`radial-gradient(circle at top right, #35131d, transparent 35rem)`) over `--bg`. No blues/greens from a "trust/profit" palette are used anywhere in the implementation — that scheme was never built.
 
 ### Typography
 
-- **Heading Font:** Crimson Pro
-- **Body Font:** Atkinson Hyperlegible
-- **Mood:** academic, research, scholarly, accessible, readable, educational
-- **Google Fonts:** [Crimson Pro + Atkinson Hyperlegible](https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Crimson+Pro:wght@400;500;600;700&display=swap)
+- **Heading / Display Font (h1, kickers, numbers):** Monospace stack — `"SFMono-Regular", "Roboto Mono", "Cascadia Mono", ui-monospace, monospace` (`--font-mono`, used only for `.page h1`) and `"SFMono-Regular", "Cascadia Mono", ui-monospace, monospace` (`--font-mono-ui`, used for eyebrows, section kickers, stat numbers, directory card numbers/labels/titles/CTAs)
+- **Body Font:** Atkinson Hyperlegible (loaded via `next/font/google`, exposed as `--font-body`), falling back to Arial, sans-serif
+- **Mood:** technical, terminal, ASCII, code-adjacent, high-contrast, academic-but-hacker
+- **Note:** Crimson Pro is NOT used anywhere in this codebase. h1 and monospace UI elements use system/native monospace stacks, not a loaded serif display font.
 
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Crimson+Pro:wght@400;500;600;700&display=swap');
-```
+### Spacing
 
-### Spacing Variables
+Spacing is expressed with fluid `clamp()` values and rem literals rather than a fixed spacing scale — there is no `--space-*` token set in the codebase. Representative values actually used:
 
-*Density: 5/10 — Standard*
+| Context | Value |
+|---------|-------|
+| `.page` vertical padding | `clamp(2rem, 7vw, 5rem)` |
+| `.home` vertical padding | `clamp(3rem, 8vw, 7rem)` |
+| `.hub-stats` margin | `clamp(2.5rem, 6vw, 5rem)` |
+| Card padding (`.course-card`, `.folder-card`, `.material-card`) | `1.25rem` |
+| Directory card padding (`.course-card--directory`) | `1.5rem` |
+| Grid gaps (`.course-grid`, `.module-list`) | `1rem` |
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--space-xs` | `4px` / `0.25rem` | Tight gaps |
-| `--space-sm` | `8px` / `0.5rem` | Icon gaps, inline spacing |
-| `--space-md` | `16px` / `1rem` | Standard padding |
-| `--space-lg` | `24px` / `1.5rem` | Section padding |
-| `--space-xl` | `32px` / `2rem` | Large gaps |
-| `--space-2xl` | `48px` / `3rem` | Section margins |
-| `--space-3xl` | `64px` / `4rem` | Hero padding |
+### Shadows
 
-### Shadow Depths
-
-| Level | Value | Usage |
-|-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
-| `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
+The implementation does not use a box-shadow depth scale. The only shadow-adjacent effect is a `text-shadow` on `.page h1`: `0 .08em .35em rgba(0,0,0,.72)`, used to lift the display heading off the ASCII/gradient background.
 
 ---
 
@@ -74,138 +65,153 @@
 ### Buttons
 
 ```css
-/* Primary Button */
-.btn-primary {
-  background: #059669;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 200ms ease;
-  cursor: pointer;
+.button, .actions a:first-child {
+  background: var(--accent);
+  color: #17120a;
+  font-weight: 700;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: .5rem .8rem;
+  border-radius: .4rem;
+  text-decoration: none;
+  transition: background-color .2s ease, color .2s ease;
 }
 
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-/* Secondary Button */
-.btn-secondary {
-  background: transparent;
-  color: #1E40AF;
-  border: 2px solid #1E40AF;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 200ms ease;
-  cursor: pointer;
+.button:hover, .actions a:first-child:hover {
+  background: var(--accent-strong);
 }
 ```
+
+Nav links and secondary actions (`.site-header nav a`) share the same padding/transition but stay transparent until hover, at which point they pick up `--surface-hover`.
 
 ### Cards
 
 ```css
-.card {
-  background: #0F172A;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow-md);
-  transition: all 200ms ease;
-  cursor: pointer;
+/* Course / folder / material card (public views) */
+.course-card, .folder-card, .material-card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: .75rem;
+  padding: 1.25rem;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
 }
 
-.card:hover {
-  box-shadow: var(--shadow-lg);
+.course-card:hover, .folder-card:hover {
   transform: translateY(-2px);
+  border-color: var(--accent);
+  background: var(--surface-hover);
 }
 ```
+
+```css
+/* Home directory card — squared corners, terminal accent rail */
+.course-card--directory {
+  border-radius: 0;
+  border-color: var(--line-soft-18);
+  background: rgba(21, 17, 24, .82);
+}
+
+.course-card--directory::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--accent-strong);
+}
+
+.course-card--directory:hover {
+  border-color: var(--accent);
+  background: rgba(31, 23, 32, .94);
+  transform: translateY(-3px);
+}
+```
+
+Note the deliberate contrast: generic cards use `border-radius: .75rem`; the home directory cards use `border-radius: 0` for a sharper, terminal-like block.
 
 ### Inputs
 
 ```css
-.input {
-  padding: 12px 16px;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 200ms ease;
+.admin-form input, .admin-form select, .create-module-form input, .upload-input input, .login-form input {
+  min-height: 44px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .4rem;
+  padding: .5rem;
 }
 
-.input:focus {
-  border-color: #1E40AF;
-  outline: none;
-  box-shadow: 0 0 0 3px #1E40AF20;
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }
 ```
 
 ### Modals
 
-```css
-.modal-overlay {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
-
-.modal {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: var(--shadow-xl);
-  max-width: 500px;
-  width: 90%;
-}
-```
+Not implemented — the codebase has no modal/dialog component. If one is added, keep the dark-surface language (`--surface` background, `--line` border, `.75rem` radius) consistent with existing cards rather than the light modal previously documented here.
 
 ---
 
 ## Style Guidelines
 
-**Style:** Modern Dark (Cinema Mobile)
+**Style:** Terminal / ASCII dark mode
 
-**Keywords:** dark mode, cinematic, ambient light, glassmorphism, deep black, indigo, glow, blur, atmospheric, reanimated, haptic, premium, layered, frosted glass, linear gradient
+**Keywords:** terminal, ASCII art, monospace, near-black, lima green accent, magenta/pink accent, sharp edges on hero elements, rounded edges on content cards, code-adjacent, high-contrast focus rings
 
-**Best For:** Developer tools, pro productivity apps, fintech/trading dashboards, media/streaming platforms, AI tool interfaces, high-end gaming companion apps
+**Best For:** Course/material hubs, developer-adjacent academic tools, dashboards that want a hacker/CLI feel rather than a soft SaaS look
 
-**Key Effects:** Expo.out Bezier(0.16,1,0.3,1) easing; spring modals (damping:20 stiffness:90); haptic-linked press (Impact Light/Medium); animated ambient light blobs (Reanimated translateX/Y slow oscillation); BlurView glassmorphism headers/nav (intensity 20); scale press 0.97 → 1.0; avoid pure #000000 (OLED smear)
+**Key Effects:** Animated ASCII canvas background (`.ascii-background`) behind the hero, with a slow `ascii-mobile-drift` keyframe scale/translate on narrow viewports (`@media (max-width: 620px) and (prefers-reduced-motion: no-preference)`); `backdrop-filter: blur(14px)` on the sticky header; simple `translateY` lift + border-color swap on card hover; `transform: scale(.98)` on directory card `:active`.
 
 ### Page Pattern
 
-**Pattern Name:** Interactive Product Demo
+**Pattern Name:** Hub / Directory Landing
 
-- **CTA Placement:** Above fold
-- **Section Order:** Hero > Features > CTA
+- **CTA Placement:** Directory cards themselves are the CTA (whole-card links with an explicit "Explorar ↗" / "Ver ramo ↗" affordance)
+- **Section Order:** Hero (`.home-hero`, eyebrow + h1 + lede) > Stats strip (`.hub-stats`) > Course directory grid (`.course-directory` > `.course-grid` of `.course-card--directory`)
 
 ---
 
 ## Motion
 
-**Scroll Reveal** (Subtle) — Trigger: scroll (viewport enter) | Duration: 300-400ms | Easing: `power1.out`
+**Reduced motion:** globally respected — `@media (prefers-reduced-motion: reduce)` collapses all transition/animation durations to `.01ms` for `*, *::before, *::after`.
 
-```js
-gsap.from(el, { opacity: 0, y: 12, duration: 0.35, ease: 'power1.out', scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none reverse' } });
+**ASCII background drift** (Subtle, mobile only) — Trigger: viewport ≤ 620px, no motion-reduction preference | Duration: 8s | Easing: `ease-in-out`, infinite loop
+
+```css
+@keyframes ascii-mobile-drift {
+  0%, 100% { transform: translate3d(-1.5%, -.5%, 0) scale(1.06); }
+  50% { transform: translate3d(1.5%, .75%, 0) scale(1.08); }
+}
 ```
 
-**Framework notes:** Requires the ScrollTrigger plugin registered once via gsap.registerPlugin(ScrollTrigger)
+**Card hover lift** — Trigger: hover/focus | Duration: 200ms | Easing: `ease`
 
-- ✅ Keep the y offset small (8-16px) so it reads as a fade, not a slide
-- ❌ Don't reveal below-the-fold content needed for SEO/crawlers as invisible-by-default without a no-JS fallback
-- ⚡ toggleActions 'play none none reverse' avoids re-triggering on every scroll direction change
+```css
+transition: transform .2s ease, border-color .2s ease, background .2s ease;
+```
+
+- ✅ Directory CTA arrow nudges right on hover, gated behind `@media (hover: hover) and (pointer: fine)` so touch devices don't get a stuck hover state
+- ✅ ASCII canvas opacity drops slightly on narrow viewports (`.76` vs `.9`) to reduce visual noise on small screens
+- ❌ Don't add motion to the ASCII canvas outside the mobile drift breakpoint — desktop keeps it static
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
 - ❌ Pure white backgrounds
+- ❌ Blue/green "fintech trust" palette — not part of this system
+- ❌ Serif display fonts (Crimson Pro or similar) — headings and kickers are monospace, body is Atkinson Hyperlegible
 
 ### Additional Forbidden Patterns
 
-- ❌ **Emojis as icons** — Use SVG icons (Heroicons, Lucide, Simple Icons)
-- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer
-- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout
-- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio
-- ❌ **Instant state changes** — Always use transitions (150-300ms)
-- ❌ **Invisible focus states** — Focus states must be visible for a11y
+- ❌ **Emojis as icons** — Use the existing `ContentIcon`/`.content-icon` SVG pattern
+- ❌ **Missing cursor:pointer** — `a, button { cursor: pointer; }` is global; keep it that way for new clickable elements
+- ❌ **Layout-shifting hovers** — card hovers use `transform`, never width/height changes
+- ❌ **Low contrast text** — `--muted` (`#c9bcc5`) on `--bg`/`--surface` must stay readable; don't introduce darker mutes
+- ❌ **Instant state changes** — use the existing `.2s ease` transition convention
+- ❌ **Invisible focus states** — always keep the `--focus` (`#dcff70`) outline on `:focus-visible`
+- ❌ **Rounded corners on home directory cards** — `.course-card--directory` is intentionally `border-radius: 0`; don't "fix" it to match the generic `.75rem` card radius
 
 ---
 
@@ -214,12 +220,12 @@ gsap.from(el, { opacity: 0, y: 12, duration: 0.35, ease: 'power1.out', scrollTri
 Before delivering any UI code, verify:
 
 - [ ] No emojis used as icons (use SVG instead)
-- [ ] All icons from consistent icon set (Heroicons/Lucide)
-- [ ] `cursor-pointer` on all clickable elements
-- [ ] Hover states with smooth transitions (150-300ms)
-- [ ] Light mode: text contrast 4.5:1 minimum
-- [ ] Focus states visible for keyboard navigation
-- [ ] `prefers-reduced-motion` respected
-- [ ] Responsive: 375px, 768px, 1024px, 1440px
-- [ ] No content hidden behind fixed navbars
+- [ ] Icons follow the existing `ContentIcon` component pattern
+- [ ] `cursor: pointer` on all clickable elements
+- [ ] Hover states use the `.2s ease` transition convention
+- [ ] Text contrast against `--bg`/`--surface` stays ≥ 4.5:1
+- [ ] Focus states use `--focus` and remain visible for keyboard navigation
+- [ ] `prefers-reduced-motion` respected (global rule already collapses durations)
+- [ ] Responsive at the project's actual breakpoints: 420px and 620px
+- [ ] No content hidden behind the sticky `.site-header`
 - [ ] No horizontal scroll on mobile

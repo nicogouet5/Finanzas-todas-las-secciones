@@ -1,0 +1,29 @@
+:root {
+  --bg: #09070b;
+  --surface: #151118;
+  --surface-hover: #211720;
+  --text: #fffafd;
+  --muted: #c9bcc5;
+  --line: #4b3440;
+  --accent: #c7ff3d;
+  --accent-strong: #ff5a84;
+  --focus: #dcff70;
+
+  /*
+   * `ui-monospace` va primero a propósito: resuelve a la mono del sistema
+   * (SF Mono en macOS, Segoe UI Mono en Windows). "SFMono-Regular" encabezaba
+   * la lista pero macOS no expone esa familia a contenido web, así que la
+   * cascada llegaba hasta el genérico `monospace` y el navegador dibujaba
+   * Courier — no la estética terminal buscada. Menlo/Consolas cubren navegadores
+   * sin soporte de `ui-monospace`.
+   */
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Roboto Mono", "Cascadia Mono", monospace;
+
+  /* Mismo stack para kickers, números y etiquetas. */
+  --font-mono-ui: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Cascadia Mono", monospace;
+
+  /* Repeated tenuous white borders/backgrounds. */
+  --line-soft: rgba(255, 255, 255, .12);
+  --line-soft-strong: rgba(255, 255, 255, .14);
+  --line-soft-18: rgba(255, 255, 255, .18);
+}

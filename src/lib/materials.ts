@@ -10,6 +10,8 @@ export type MaterialItem = {
   size: number;
   contentType: string;
   source: MaterialSource;
+  /** ISO 8601. `null` para los materiales locales de respaldo, que no tienen fecha de subida. */
+  uploadedAt: string | null;
 };
 
 export type FolderNode = {
@@ -27,6 +29,7 @@ const LOCAL_MATERIALS: MaterialItem[] = [
     downloadUrl: "/materiales/finanzas/administracion-de-caja/index.html",
     size: 95_559,
     contentType: "text/html",
+    uploadedAt: null,
     source: "local",
   },
   {
@@ -36,6 +39,7 @@ const LOCAL_MATERIALS: MaterialItem[] = [
     downloadUrl: "/materiales/finanzas/administracion-de-caja/presentacion_administracion_caja.html",
     size: 86_936,
     contentType: "text/html",
+    uploadedAt: null,
     source: "local",
   },
   {
@@ -45,6 +49,7 @@ const LOCAL_MATERIALS: MaterialItem[] = [
     downloadUrl: "/materiales/finanzas/certamen-2/presentacion_certamen_2_finanzas.html",
     size: 115_909,
     contentType: "text/html",
+    uploadedAt: null,
     source: "local",
   },
 ];
@@ -58,7 +63,8 @@ export async function listMaterials(): Promise<MaterialItem[]> {
     const result = await list({ prefix: "materiales/", cursor });
     const page: Array<MaterialItem | null> = await Promise.all(result.blobs.map(async (blob) => {
       const path = blob.pathname.slice("materiales/".length);
-      if (!path || path.endsWith("/.folder")) return null;
+      // `_meta.json` guarda los módulos del ramo: es estado interno, no material del alumno.
+      if (!path || path.endsWith("/.folder") || path.endsWith("/_meta.json")) return null;
       const metadata = await head(blob.url);
       return {
         path,
@@ -68,6 +74,7 @@ export async function listMaterials(): Promise<MaterialItem[]> {
         size: blob.size,
         contentType: metadata.contentType,
         source: "blob",
+        uploadedAt: blob.uploadedAt instanceof Date ? blob.uploadedAt.toISOString() : String(blob.uploadedAt),
       };
     }));
     materials.push(...page.filter((item): item is MaterialItem => item !== null));

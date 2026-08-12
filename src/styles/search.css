@@ -1,0 +1,126 @@
+/* Buscador y filtros de material. */
+
+.material-search {
+  margin-top: 2rem;
+}
+
+.material-search__prompt {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--line-soft-18);
+  background: rgba(21, 17, 24, .82);
+}
+
+.material-search__caret {
+  color: var(--accent);
+  font-family: var(--font-mono-ui);
+  font-size: 1.1rem;
+}
+
+.material-search__input {
+  flex: 1 1 auto;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono-ui);
+  font-size: 1rem;
+  caret-color: var(--accent);
+}
+
+.material-search__input:focus {
+  outline: none;
+}
+
+.material-search__input::placeholder {
+  color: var(--muted);
+}
+
+.material-search__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .85rem;
+}
+
+.material-search__chip {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--line-soft-18);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono-ui);
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition: border-color .2s ease, color .2s ease, background .2s ease;
+}
+
+.material-search__chip:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.material-search__chip--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+
+.material-search__status {
+  margin: .6rem 0 0;
+  min-height: 1.2em;
+  color: var(--muted);
+  font-family: var(--font-mono-ui);
+  font-size: .78rem;
+  letter-spacing: .06em;
+}
+
+.material-search__results {
+  display: grid;
+  gap: 2px;
+  margin: .5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line-soft-18);
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.material-search__result a {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  padding: .7rem 1rem;
+  min-height: 44px;
+  text-decoration: none;
+  background: rgba(21, 17, 24, .82);
+  color: var(--text);
+}
+
+.material-search__result--active a,
+.material-search__result a:hover {
+  background: var(--surface-hover);
+  border-left: 3px solid var(--accent);
+}
+
+.material-search__result-title {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.material-search__result-module {
+  color: var(--muted);
+  font-family: var(--font-mono-ui);
+  font-size: .72rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.material-search__empty {
+  padding: .85rem 1rem;
+  color: var(--muted);
+  background: rgba(21, 17, 24, .82);
+}
