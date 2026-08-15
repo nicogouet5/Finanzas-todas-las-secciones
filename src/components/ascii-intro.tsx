@@ -97,9 +97,26 @@ export function AsciiBackground() {
     document.addEventListener("visibilitychange", onVisibilityChange);
     motionQuery.addEventListener("change", onMotionChange);
 
+    /**
+     * iOS Safari a veces deja de invocar el callback de un requestAnimationFrame ya
+     * agendado tras unos segundos sin gesto del usuario (ahorro de batería), sin disparar
+     * visibilitychange. El id sigue "pendiente" pero el loop queda muerto en silencio.
+     * Este watchdog detecta que no llegó un frame nuevo en un rato y relanza el loop.
+     */
+    const watchdog = window.setInterval(() => {
+      if (!active || paused || reducedMotion) return;
+      if (performance.now() - lastFrameRef.current < 2000) return;
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = undefined;
+      }
+      schedule();
+    }, 1500);
+
     return () => {
       active = false;
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      window.clearInterval(watchdog);
       image.onload = null;
       image.onerror = null;
       window.removeEventListener("resize", resize);
