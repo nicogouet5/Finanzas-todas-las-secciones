@@ -67,6 +67,13 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   display: block;
   width: min(9rem, 36vw);
   height: auto;
+  transition: transform .2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wordmark:hover .brand-logo {
+    transform: scale(1.04);
+  }
 }
 
 .site-header nav {
@@ -75,6 +82,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 .site-header nav a, .actions a, .button {
+  position: relative;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -86,6 +94,23 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 .site-header nav a:hover, .actions a:hover, .button:hover {
   background: var(--surface-hover);
+}
+
+.site-header nav a::after {
+  content: "";
+  position: absolute;
+  left: .8rem;
+  right: .8rem;
+  bottom: .3rem;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .2s ease;
+}
+
+.site-header nav a:hover::after, .site-header nav a:focus-visible::after {
+  transform: scaleX(1);
 }
 
 .button, .actions a:first-child {

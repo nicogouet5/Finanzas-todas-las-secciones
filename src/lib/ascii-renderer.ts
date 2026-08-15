@@ -15,7 +15,12 @@ const defaultConfig: AsciiConfig = {
 const tint = [255, 76, 123] as const;
 const signal = [199, 255, 61] as const;
 const financialGlyphs = "$%01+−";
-type RendererBuffers = { sample: HTMLCanvasElement; bloom: HTMLCanvasElement };
+type RendererBuffers = {
+  sample: HTMLCanvasElement;
+  bloom: HTMLCanvasElement;
+  source?: CanvasImageSource;
+  pixels?: Uint8ClampedArray;
+};
 const buffers = new WeakMap<CanvasRenderingContext2D, RendererBuffers>();
 
 function rendererBuffers(context: CanvasRenderingContext2D, width: number, height: number, sampleWidth: number, sampleHeight: number) {
@@ -27,6 +32,8 @@ function rendererBuffers(context: CanvasRenderingContext2D, width: number, heigh
   if (current.sample.width !== sampleWidth || current.sample.height !== sampleHeight) {
     current.sample.width = sampleWidth;
     current.sample.height = sampleHeight;
+    current.source = undefined;
+    current.pixels = undefined;
   }
   if (current.bloom.width !== width || current.bloom.height !== height) {
     current.bloom.width = width;
@@ -89,17 +96,23 @@ export function drawAsciiFrame(
 
   const sampleWidth = Math.ceil(width / config.cellSize);
   const sampleHeight = Math.ceil(height / config.cellSize);
-  const { sample, bloom } = rendererBuffers(context, width, height, sampleWidth, sampleHeight);
+  const renderer = rendererBuffers(context, width, height, sampleWidth, sampleHeight);
+  const { sample, bloom } = renderer;
   const sampleContext = sample.getContext("2d");
   if (!sampleContext) return;
 
-  const sourceDimensions = source as CanvasImageSource & { naturalWidth?: number; naturalHeight?: number; videoWidth?: number; videoHeight?: number; width?: number; height?: number };
-  const sourceWidth = sourceDimensions.naturalWidth || sourceDimensions.videoWidth || sourceDimensions.width || sample.width;
-  const sourceHeight = sourceDimensions.naturalHeight || sourceDimensions.videoHeight || sourceDimensions.height || sample.height;
-  const sourceRect = coverDrawRect(sourceWidth, sourceHeight, sample.width, sample.height);
-  sampleContext.clearRect(0, 0, sample.width, sample.height);
-  sampleContext.drawImage(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
-  const pixels = sampleContext.getImageData(0, 0, sample.width, sample.height).data;
+  let pixels = renderer.pixels;
+  if (!pixels || renderer.source !== source) {
+    const sourceDimensions = source as CanvasImageSource & { naturalWidth?: number; naturalHeight?: number; videoWidth?: number; videoHeight?: number; width?: number; height?: number };
+    const sourceWidth = sourceDimensions.naturalWidth || sourceDimensions.videoWidth || sourceDimensions.width || sample.width;
+    const sourceHeight = sourceDimensions.naturalHeight || sourceDimensions.videoHeight || sourceDimensions.height || sample.height;
+    const sourceRect = coverDrawRect(sourceWidth, sourceHeight, sample.width, sample.height);
+    sampleContext.clearRect(0, 0, sample.width, sample.height);
+    sampleContext.drawImage(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
+    pixels = sampleContext.getImageData(0, 0, sample.width, sample.height).data;
+    renderer.source = source;
+    renderer.pixels = pixels;
+  }
   const bloomContext = bloom.getContext("2d");
   if (!bloomContext) return;
 
