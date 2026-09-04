@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --hub-void: #09070b;
+  --hub-panel: #151118;
+  --hub-raised: #211720;
+  --hub-paper: #fffafd;
+  --hub-muted: #c9bcc5;
+  --hub-border: #4b3440;
+  --hub-lime: #c7ff3d;
+  --hub-pink: #ff5a84;
+  --hub-lime-soft: #dcff70;
+  --hub-sans: "Atkinson Hyperlegible", "Atkinson Hyperlegible Next", ui-sans-serif, system-ui, sans-serif;
+  --hub-mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  color: var(--hub-paper);
+  background: var(--hub-void);
+  font-family: var(--hub-sans);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { min-height: 100%; margin: 0; }
+
+body { min-width: 320px; background: var(--hub-void); }
+
+button, input, select, textarea { font: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--hub-lime);
+  outline-offset: 3px;
+}
+
+.certamen-shell {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+}
+
+.certamen-card {
+  width: min(100%, 42rem);
+  border: 1px solid var(--hub-border);
+  border-radius: 1rem;
+  background: var(--hub-panel);
+  padding: clamp(1.5rem, 5vw, 3rem);
+}
+
+.certamen-kicker { color: var(--hub-lime); font-family: var(--hub-mono); font-size: .875rem; }
+.certamen-card h1 { margin: .5rem 0; font-size: clamp(2rem, 7vw, 4.5rem); line-height: .95; }
+.certamen-card p { color: var(--hub-muted); }
+.certamen-card button { min-height: 44px; padding: .625rem 1rem; border: 0; border-radius: .5rem; background: var(--hub-lime); color: var(--hub-void); font-weight: 700; cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
