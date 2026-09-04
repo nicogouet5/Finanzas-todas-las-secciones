@@ -150,10 +150,15 @@ export const studyModules = [
       },
       {
         id: 'abc-capm',
-        statement: 'Evalúa A/B/C: correlación menor que 1 puede reducir riesgo; beta mide riesgo total; retorno esperado mayor que CAPM implica subvaloración bajo los supuestos del ejercicio.',
+        statement: 'La clasificación correcta es A=verdadero, B=falso y C=verdadero.',
         verdict: 'verdadero',
-        justification: 'A es verdadero, B es falso porque beta mide riesgo sistemático, y C es verdadero bajo los supuestos: el activo ofrece más retorno que el requerido.',
+        justification: 'Cada subafirmación se evalúa por separado: A es verdadero, B es falso porque beta mide riesgo sistemático, y C es verdadero bajo los supuestos.',
         memoryHook: 'A mezcla; B no mide todo; C compara promesa con peaje.',
+        subitems: [
+          { id: 'a-correlacion', statement: 'Una correlación menor que 1 puede reducir riesgo.', verdict: 'verdadero' },
+          { id: 'b-beta', statement: 'Beta mide riesgo total.', verdict: 'falso' },
+          { id: 'c-capm', statement: 'Un retorno esperado mayor que CAPM implica subvaloración bajo los supuestos del ejercicio.', verdict: 'verdadero' },
+        ],
       },
     ],
     exercises: [
@@ -165,7 +170,7 @@ export const studyModules = [
         steps: [
           'Betas: Poroto .7, Lenteja .5625, Garbanzo 1.2. Treynor: .142857, .142222, .091667; se eligen Poroto/Lenteja.',
           'PMV: pesos .597254/.402746; retorno .131945; varianza .004982334; sigma .070585651.',
-          'Con correlación portafolio-mercado .5, beta .441160. Varianza sistemática .001245584 e idiosincrática .003736751: 25%/75%.',
+          'Con correlación portafolio-mercado .5, beta .441160. Varianza sistemática .001245584 e idiosincrática .003736751: 25%/75%. Sus desviaciones estándar son .035293 y .061129; no deben sumarse, porque se suman las varianzas para reconstruir la varianza total .004982334.',
           'Con z=2.326, 252 días bursátiles, VaR 10 días al 99% ≈327,059.',
           'CAPM: Poroto .117, Lenteja .101875, Garbanzo .172. Poroto y Lenteja están subvalorados; Garbanzo, sobrevalorado.',
         ],

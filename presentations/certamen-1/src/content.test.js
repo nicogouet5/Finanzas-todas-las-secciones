@@ -43,9 +43,16 @@ test('incluye el caso, decisiones y resultados obligatorios del módulo de porta
   const portfolio = studyModules[2];
   assert.deepEqual(portfolio.comments.map(({ verdict }) => verdict), ['falso', 'falso', 'verdadero']);
   const text = JSON.stringify(portfolio);
-  for (const required of ['Poroto', 'Lenteja', 'Garbanzo', '.597254', '.402746', '.131945', '.004982334', '.070585651', '.441160', '.001245584', '.003736751', '25%', '75%', '327,059', '.7', '.5625', '1.2', '.142857', '.142222', '.091667', '.117', '.101875', '.172', 'X1', 'X2', '70%/30%', '40%/60%']) {
+  for (const required of ['Poroto', 'Lenteja', 'Garbanzo', '.597254', '.402746', '.131945', '.004982334', '.070585651', '.441160', '.001245584', '.003736751', '.035293', '.061129', 'no deben sumarse', '25%', '75%', '327,059', '.7', '.5625', '1.2', '.142857', '.142222', '.091667', '.117', '.101875', '.172', 'X1', 'X2', '70%/30%', '40%/60%']) {
     assert.ok(text.includes(required), `Falta ${required}`);
   }
+});
+
+test('representa A/B/C como clasificaciones individuales, no como una afirmación mixta', () => {
+  const abc = studyModules[2].comments.find(({ id }) => id === 'abc-capm');
+  assert.equal(abc.statement, 'La clasificación correcta es A=verdadero, B=falso y C=verdadero.');
+  assert.deepEqual(abc.subitems.map(({ verdict }) => verdict), ['verdadero', 'falso', 'verdadero']);
+  assert.deepEqual(abc.subitems.map(({ id }) => id), ['a-correlacion', 'b-beta', 'c-capm']);
 });
 
 test('declara las fuentes y el origen didáctico de los ejercicios', () => {
