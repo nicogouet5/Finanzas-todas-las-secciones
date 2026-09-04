@@ -10,7 +10,7 @@ import {
   presentWealth,
   sharpeRatio,
 } from '../finance.js';
-import { maximumSharpeWeight, proximityLabel } from '../experience.js';
+import { buildLogUtilityChart, maximumSharpeWeight, proximityLabel } from '../experience.js';
 import { Formula } from './Formula.jsx';
 
 const money = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
@@ -39,20 +39,8 @@ export function RiskSimulator() {
   const maximumPremium = inputs.wealth - equivalent;
   const offeredPremium = 5_400;
   const shouldInsure = offeredPremium <= maximumPremium;
-  const curve = Array.from({ length: 41 }, (_, index) => {
-    const wealth = Math.max(1, inputs.wealth * (0.25 + index * 0.025));
-    const x = 48 + index * 12.7;
-    const minUtility = Math.log(inputs.wealth * 0.25);
-    const maxUtility = Math.log(inputs.wealth * 1.25);
-    const y = 224 - ((Math.log(wealth) - minUtility) / (maxUtility - minUtility)) * 174;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
-  const markerX = (value) => 48 + ((value / inputs.wealth - 0.25) / 1) * 508;
-  const markerY = (value) => {
-    const minUtility = Math.log(inputs.wealth * 0.25);
-    const maxUtility = Math.log(inputs.wealth * 1.25);
-    return 224 - ((Math.log(Math.max(1, value)) - minUtility) / (maxUtility - minUtility)) * 174;
-  };
+  const chart = buildLogUtilityChart([wealthAfterLoss, equivalent, inputs.wealth]);
+  const curve = chart.curve.map(({ x, y }) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
 
   function update(key, value) {
     setInputs((current) => {
@@ -85,8 +73,8 @@ export function RiskSimulator() {
         <line x1="48" y1="224" x2="570" y2="224" />
         <line x1="48" y1="224" x2="48" y2="34" />
         <polyline className="chart__line" points={curve} />
-        {[[wealthAfterLoss, 'Pérdida'], [equivalent, 'CE'], [inputs.wealth, 'W₀']].map(([value, label]) => <g key={label} transform={`translate(${markerX(value)},${markerY(value)})`}>
-          <circle r="5" /><text x="8" y="-8">{label}</text>
+        {chart.markers.map(({ x, y }, index) => <g key={['Pérdida', 'CE', 'W₀'][index]} transform={`translate(${x},${y})`}>
+          <circle r="5" /><text x="8" y="-8">{['Pérdida', 'CE', 'W₀'][index]}</text>
         </g>)}
         <text className="chart__axis-label" x="555" y="248">Riqueza</text>
         <text className="chart__axis-label" x="14" y="30">U(W)</text>

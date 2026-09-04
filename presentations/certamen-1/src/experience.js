@@ -6,6 +6,62 @@ const simulatorTitles = {
   portafolio: 'Explorador de portafolio',
 };
 
+export const CERTAINTY_EQUIVALENT_FORMULA = 'CE = exp(E[ln(W)])';
+
+const subitemFeedback = {
+  'a-correlacion': {
+    justification: 'Verdadero. Si la correlación es menor que 1, los activos no se mueven perfectamente juntos y la covarianza puede reducir la varianza del portafolio.',
+    memoryHook: 'Movimientos menos sincronizados abren espacio para diversificar.',
+  },
+  'b-beta': {
+    justification: 'Falso. Beta mide sensibilidad al riesgo sistemático del mercado; el riesgo total también incluye el componente idiosincrático.',
+    memoryHook: 'Beta mira la lluvia del mercado, no cada gotera propia.',
+  },
+  'c-capm': {
+    justification: 'Verdadero bajo los supuestos de CAPM. Si el retorno esperado supera el retorno requerido, el activo ofrece más retorno que su peaje de riesgo y se interpreta como subvalorado.',
+    memoryHook: 'Promesa sobre el peaje CAPM indica precio bajo, bajo los supuestos.',
+  },
+};
+
+export function buildCommentPrompts(comment) {
+  if (!comment.subitems) return [comment];
+  return comment.subitems.map((subitem) => ({
+    ...subitem,
+    ...subitemFeedback[subitem.id],
+  }));
+}
+
+export function areCommentsReady(comments, choices) {
+  return comments.every((comment) => buildCommentPrompts(comment).every((prompt) => Boolean(choices[prompt.id])));
+}
+
+export function buildLogUtilityChart(values) {
+  if (!Array.isArray(values) || values.length === 0 || values.some((value) => !Number.isFinite(value) || value <= 0)) {
+    throw new RangeError('Los valores del gráfico deben ser positivos y finitos.');
+  }
+
+  const bounds = { left: 48, right: 556, top: 50, bottom: 224 };
+  const dataMin = Math.min(...values);
+  const dataMax = Math.max(...values);
+  const spread = Math.max(dataMax - dataMin, dataMax * 0.05, 1);
+  const domainMin = Math.max(1, dataMin - spread * 0.08);
+  const domainMax = dataMax + spread * 0.08;
+  const logMin = Math.log(domainMin);
+  const logRange = Math.log(domainMax) - logMin;
+
+  const point = (value) => ({
+    x: bounds.left + ((value - domainMin) / (domainMax - domainMin)) * (bounds.right - bounds.left),
+    y: bounds.bottom - ((Math.log(value) - logMin) / logRange) * (bounds.bottom - bounds.top),
+  });
+
+  const curve = Array.from({ length: 41 }, (_, index) => {
+    const value = domainMin + (index / 40) * (domainMax - domainMin);
+    return point(value);
+  });
+
+  return { bounds, curve, markers: values.map(point) };
+}
+
 export function buildModuleScreens(module) {
   return [
     ...module.theorySlides.map((slide, index) => ({ id: `theory-${index}`, kind: 'theory', title: slide.title, data: slide })),

@@ -1,5 +1,6 @@
 import { Formula } from './Formula.jsx';
 import { Icon } from './Icon.jsx';
+import { CERTAINTY_EQUIVALENT_FORMULA } from '../experience.js';
 
 const groups = [
   {
@@ -7,7 +8,7 @@ const groups = [
     formulas: [
       ['E(X) = Σ pᵢxᵢ', 'pᵢ: probabilidad; xᵢ: resultado monetario.'],
       ['E[U(W)] = Σ pᵢU(Wᵢ)', 'Wᵢ: riqueza en cada estado; U: función de utilidad.'],
-      ['CE = eᴱ⸂ˡⁿ⁽ᵂ⁾⸃', 'CE: equivalente cierto bajo utilidad logarítmica.'],
+      [CERTAINTY_EQUIVALENT_FORMULA, 'CE: equivalente cierto bajo utilidad logarítmica.'],
       ['πjusta = pL  ·  πmáx = W₀ − CE', 'L: pérdida; π: prima de seguro.'],
     ],
   },

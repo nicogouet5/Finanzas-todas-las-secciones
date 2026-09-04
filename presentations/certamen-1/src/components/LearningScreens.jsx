@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { areCommentsReady, buildCommentPrompts } from '../experience.js';
 import { Formula } from './Formula.jsx';
 import { Icon } from './Icon.jsx';
 import { SolutionStepper } from './SolutionStepper.jsx';
@@ -32,10 +33,36 @@ const OPTIONS = [
   { value: 'incierto', label: 'Incierto' },
 ];
 
+function CommentPrompt({ prompt, label, choice, submitted, onChoose }) {
+  const correct = choice === prompt.verdict;
+  return <div className="comment-prompt" role="group" aria-label={`Clasificar: ${prompt.statement}`}>
+    {label && <p className="comment-prompt__statement"><strong>{label}.</strong> {prompt.statement}</p>}
+    <div className="choice-row">
+      {OPTIONS.map((option) => <label className={choice === option.value ? 'is-selected' : ''} key={option.value}>
+        <input
+          type="radio"
+          name={prompt.id}
+          value={option.value}
+          checked={choice === option.value}
+          disabled={submitted}
+          aria-label={`${option.label}: ${prompt.statement}`}
+          onChange={() => onChoose(option.value)}
+        />
+        <span>{option.label}</span>
+      </label>)}
+    </div>
+    {submitted && <div className={`feedback ${correct ? 'feedback--correct' : 'feedback--wrong'}`} role="status">
+      <strong>{correct ? 'Correcto' : `Ajusta tu criterio: era ${prompt.verdict}.`}</strong>
+      <p>{prompt.justification}</p>
+      <p className="memory-hook"><span>Gancho de memoria</span>{prompt.memoryHook}</p>
+    </div>}
+  </div>;
+}
+
 export function CommentActivity({ comments, onComplete }) {
   const [choices, setChoices] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const ready = comments.every((comment) => choices[comment.id]);
+  const ready = areCommentsReady(comments, choices);
 
   function check() {
     if (!ready) return;
@@ -49,30 +76,21 @@ export function CommentActivity({ comments, onComplete }) {
   }
 
   return <section className="activity-stack" aria-describedby="comment-instructions">
-    <p id="comment-instructions" className="lead-copy">Clasifica las tres afirmaciones. Tu selección no cuenta hasta que presiones <strong>Comprobar</strong>.</p>
+    <p id="comment-instructions" className="lead-copy">Clasifica cada afirmación de las tres tarjetas. Tu selección no cuenta hasta que presiones <strong>Comprobar</strong>.</p>
     {comments.map((comment, index) => {
-      const correct = choices[comment.id] === comment.verdict;
+      const prompts = buildCommentPrompts(comment);
       return <fieldset className="comment-card" key={comment.id}>
         <legend><span>{String(index + 1).padStart(2, '0')}</span>{comment.statement}</legend>
-        {comment.subitems && <ul className="subitems">{comment.subitems.map((item) => <li key={item.id}><strong>{item.id.slice(0, 1).toUpperCase()}.</strong> {item.statement}</li>)}</ul>}
-        <div className="choice-row">
-          {OPTIONS.map((option) => <label className={choices[comment.id] === option.value ? 'is-selected' : ''} key={option.value}>
-            <input
-              type="radio"
-              name={comment.id}
-              value={option.value}
-              checked={choices[comment.id] === option.value}
-              disabled={submitted}
-              onChange={() => setChoices((current) => ({ ...current, [comment.id]: option.value }))}
-            />
-            <span>{option.label}</span>
-          </label>)}
+        <div className={prompts.length > 1 ? 'subitem-prompts' : undefined}>
+          {prompts.map((prompt, promptIndex) => <CommentPrompt
+            key={prompt.id}
+            prompt={prompt}
+            label={prompts.length > 1 ? String.fromCharCode(65 + promptIndex) : undefined}
+            choice={choices[prompt.id]}
+            submitted={submitted}
+            onChoose={(value) => setChoices((current) => ({ ...current, [prompt.id]: value }))}
+          />)}
         </div>
-        {submitted && <div className={`feedback ${correct ? 'feedback--correct' : 'feedback--wrong'}`} role="status">
-          <strong>{correct ? 'Correcto' : `Ajusta tu criterio: era ${comment.verdict}.`}</strong>
-          <p>{comment.justification}</p>
-          <p className="memory-hook"><span>Gancho de memoria</span>{comment.memoryHook}</p>
-        </div>}
       </fieldset>;
     })}
     <div className="activity-actions">
