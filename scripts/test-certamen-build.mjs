@@ -3,8 +3,13 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 
-const resourceTags = /<(script|link|style|img|source|video|audio|iframe|object|embed|track|use)\b[^>]*>/gi;
-const resourceAttribute = /\b(src|href)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+const resourceAttributes = {
+  script: ['src'], link: ['href'], style: ['src', 'href'], img: ['src', 'srcset'], source: ['src', 'srcset'],
+  video: ['src', 'poster'], audio: ['src'], iframe: ['src'], object: ['data'], embed: ['src'], track: ['src'],
+  input: ['src'], image: ['href', 'xlink:href'], use: ['href', 'xlink:href'],
+};
+const htmlTag = /<([a-z][\w:-]*)\b[^>]*>/gi;
+const htmlAttribute = /\b([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
 const runtimeLoaders = [
   /\bfetch\s*\(\s*(["'])(.*?)\1/gi,
   /\bimport\s*\(\s*(["'])(.*?)\1/gi,
@@ -17,13 +22,25 @@ function assertNoExternalReference(reference, context, allowFragment = false) {
   assert.ok(allowFragment && reference.startsWith('#'), `Dependencia externa detectada en ${context}: ${reference}`);
 }
 
+function referencesFor(attribute, value) {
+  return attribute === 'srcset'
+    ? value.split(',').map((candidate) => candidate.trim().split(/\s+/, 1)[0]).filter(Boolean)
+    : [value];
+}
+
 export function assertSelfContained(html) {
-  for (const tag of html.matchAll(resourceTags)) {
-    const [, name] = tag;
-    for (const attribute of tag[0].matchAll(resourceAttribute)) {
-      const [, attributeName, doubleQuoted, singleQuoted, bare] = attribute;
-      const reference = doubleQuoted ?? singleQuoted ?? bare ?? '';
-      assertNoExternalReference(reference, `<${name}> ${attributeName}`, name.toLowerCase() === 'use' && attributeName.toLowerCase() === 'href');
+  for (const tag of html.matchAll(htmlTag)) {
+    const name = tag[1].toLowerCase();
+    const attributes = resourceAttributes[name];
+    if (!attributes) continue;
+    for (const attribute of tag[0].matchAll(htmlAttribute)) {
+      const attributeName = attribute[1].toLowerCase();
+      if (!attributes.includes(attributeName)) continue;
+      const value = attribute[2] ?? attribute[3] ?? attribute[4] ?? '';
+      const allowFragment = name === 'use' && ['href', 'xlink:href'].includes(attributeName);
+      for (const reference of referencesFor(attributeName, value)) {
+        assertNoExternalReference(reference, `<${name}> ${attributeName}`, allowFragment);
+      }
     }
   }
 
