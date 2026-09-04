@@ -71,6 +71,8 @@ test('calcula VaR y descompone el riesgo del portafolio', () => {
   const risk = riskDecomposition(0.004982334, 0.44116, 0.08 ** 2);
   closeTo(risk.systematicVariance, 0.001245584, 0.00000001);
   closeTo(risk.idiosyncraticVariance, 0.003736751, 0.00000001);
+  closeTo(Math.sqrt(risk.systematicVariance), 0.035293, 0.000001);
+  closeTo(Math.sqrt(risk.idiosyncraticVariance), 0.061129, 0.000001);
   closeTo(risk.systematicShare, 0.25, 0.00001);
   closeTo(risk.idiosyncraticShare, 0.75, 0.00001);
 });
