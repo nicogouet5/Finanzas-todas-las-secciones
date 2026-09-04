@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildMaterialFolders, buildMaterialTree, listMaterials, mergeMaterials } from "./materials.ts";
+import { buildMaterialFolders, buildMaterialTree, listAdminMaterials, listMaterials, mergeMaterials } from "./materials.ts";
 
 const item = (path: string, source: "local" | "blob" = "blob", overrides: Partial<Awaited<ReturnType<typeof listMaterials>>[number]> = {}) => ({
   path,
@@ -75,4 +75,24 @@ test("listMaterials mezcla Blob y locales cuando Blob está configurado", async 
     "finanzas/certamen-2/presentacion_certamen_2_finanzas.html",
   ]);
   assert.equal(materials[0]?.source, "local");
+});
+
+test("listAdminMaterials expone solo Blob y nunca materiales locales administrables", async () => {
+  const materials = await listAdminMaterials(async () => [
+    item("finanzas/blob/solo-remoto.pdf", "blob", { contentType: "application/pdf" }),
+  ], true);
+
+  assert.deepEqual(materials.map((entry) => entry.path), ["finanzas/blob/solo-remoto.pdf"]);
+  assert.ok(materials.every((entry) => entry.source === "blob"));
+});
+
+test("listMaterials obtiene el tamaño del HTML local desde el archivo real", async () => {
+  const materials = await listMaterials(
+    async () => [],
+    false,
+    async (path) => ({ size: path.includes("presentacion-certamen-1-finanzas-corporativas.html") ? 197_071 : 10 }),
+  );
+
+  const certamen = materials.find((entry) => entry.path === "finanzas-corporativas/certamen-1/presentacion-certamen-1-finanzas-corporativas.html");
+  assert.equal(certamen?.size, 197_071);
 });

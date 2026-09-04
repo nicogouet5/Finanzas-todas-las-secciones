@@ -1,3 +1,5 @@
+import { stat } from "node:fs/promises";
+import { resolve } from "node:path";
 import { head, list } from "@vercel/blob";
 
 export type MaterialSource = "local" | "blob";
@@ -21,16 +23,26 @@ export type FolderNode = {
   files: MaterialItem[];
 };
 
+type LocalMaterialSeed = Omit<MaterialItem, "size"> & {
+  filePath: string;
+  fallbackSize: number;
+};
+
+type ReadStat = (path: string) => Promise<{ size: number }>;
+
 export const CERTAMEN_1_PRESENTATION_PATH = "finanzas-corporativas/certamen-1/presentacion-certamen-1-finanzas-corporativas.html";
 export const CERTAMEN_1_PRESENTATION_TITLE = "Repaso Certamen 1: riesgo, dos períodos y portafolios";
 
-const LOCAL_MATERIALS: MaterialItem[] = [
+const publicFile = (path: string) => resolve(process.cwd(), "public/materiales", path);
+
+const LOCAL_MATERIALS: LocalMaterialSeed[] = [
   {
     path: "finanzas/administracion-de-caja/index.html",
     name: "index.html",
     url: "/materiales/finanzas/administracion-de-caja/index.html",
     downloadUrl: "/materiales/finanzas/administracion-de-caja/index.html",
-    size: 95_559,
+    filePath: publicFile("finanzas/administracion-de-caja/index.html"),
+    fallbackSize: 95_559,
     contentType: "text/html",
     uploadedAt: null,
     source: "local",
@@ -40,7 +52,8 @@ const LOCAL_MATERIALS: MaterialItem[] = [
     name: "presentacion_administracion_caja.html",
     url: "/materiales/finanzas/administracion-de-caja/presentacion_administracion_caja.html",
     downloadUrl: "/materiales/finanzas/administracion-de-caja/presentacion_administracion_caja.html",
-    size: 86_936,
+    filePath: publicFile("finanzas/administracion-de-caja/presentacion_administracion_caja.html"),
+    fallbackSize: 86_936,
     contentType: "text/html",
     uploadedAt: null,
     source: "local",
@@ -50,7 +63,8 @@ const LOCAL_MATERIALS: MaterialItem[] = [
     name: "presentacion_certamen_2_finanzas.html",
     url: "/materiales/finanzas/certamen-2/presentacion_certamen_2_finanzas.html",
     downloadUrl: "/materiales/finanzas/certamen-2/presentacion_certamen_2_finanzas.html",
-    size: 115_909,
+    filePath: publicFile("finanzas/certamen-2/presentacion_certamen_2_finanzas.html"),
+    fallbackSize: 115_909,
     contentType: "text/html",
     uploadedAt: null,
     source: "local",
@@ -60,7 +74,8 @@ const LOCAL_MATERIALS: MaterialItem[] = [
     name: CERTAMEN_1_PRESENTATION_TITLE,
     url: "/materiales/finanzas-corporativas/certamen-1/presentacion-certamen-1-finanzas-corporativas.html",
     downloadUrl: "/materiales/finanzas-corporativas/certamen-1/presentacion-certamen-1-finanzas-corporativas.html",
-    size: 170_558,
+    filePath: publicFile(CERTAMEN_1_PRESENTATION_PATH),
+    fallbackSize: 170_558,
     contentType: "text/html",
     uploadedAt: null,
     source: "local",
@@ -102,9 +117,29 @@ async function readBlobMaterials(): Promise<MaterialItem[]> {
   return materials;
 }
 
-export async function listMaterials(readRemote: () => Promise<MaterialItem[]> = readBlobMaterials, blobEnabled = Boolean(process.env.BLOB_READ_WRITE_TOKEN)): Promise<MaterialItem[]> {
-  if (!blobEnabled) return mergeMaterials([], LOCAL_MATERIALS);
-  return mergeMaterials(await readRemote(), LOCAL_MATERIALS);
+async function readLocalMaterials(readLocalStat: ReadStat = stat): Promise<MaterialItem[]> {
+  return Promise.all(LOCAL_MATERIALS.map(async ({ filePath, fallbackSize, ...item }) => {
+    try {
+      return { ...item, size: (await readLocalStat(filePath)).size };
+    } catch {
+      return { ...item, size: fallbackSize };
+    }
+  }));
+}
+
+export async function listAdminMaterials(readRemote: () => Promise<MaterialItem[]> = readBlobMaterials, blobEnabled = Boolean(process.env.BLOB_READ_WRITE_TOKEN)): Promise<MaterialItem[]> {
+  if (!blobEnabled) return [];
+  return readRemote();
+}
+
+export async function listMaterials(
+  readRemote: () => Promise<MaterialItem[]> = readBlobMaterials,
+  blobEnabled = Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+  readLocalStat: ReadStat = stat,
+): Promise<MaterialItem[]> {
+  const localItems = await readLocalMaterials(readLocalStat);
+  if (!blobEnabled) return mergeMaterials([], localItems);
+  return mergeMaterials(await readRemote(), localItems);
 }
 
 export function buildMaterialTree(items: MaterialItem[]): FolderNode {
