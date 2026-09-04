@@ -8,7 +8,7 @@
     "build:certamen-1": "vite build --config presentations/certamen-1/vite.config.js",
     "start": "next start",
     "test": "node --experimental-strip-types --test src/lib/*.test.ts",
-    "test:certamen-build": "node scripts/test-certamen-build.mjs"
+    "test:certamen-build": "node --test scripts/test-certamen-build.test.mjs && node scripts/test-certamen-build.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0",
