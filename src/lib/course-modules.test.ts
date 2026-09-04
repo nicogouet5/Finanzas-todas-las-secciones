@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mergeUnassigned, reorderBy } from "./course-modules.ts";
+import { mergeUnassigned, readCourseMeta, reorderBy } from "./course-modules.ts";
 import type { MaterialItem } from "./materials.ts";
 
 const item = (path: string): MaterialItem => ({ path, name: path.split("/").at(-1) ?? path, url: path, downloadUrl: path, size: 1, contentType: "text/html", uploadedAt: null, source: "local" });
@@ -36,4 +36,11 @@ test("reordena ítems dentro de un módulo por ruta", () => {
   const items = [{ path: "a", order: 0 }, { path: "b", order: 1 }];
   const reordered = reorderBy(items, ["b", "a"], (entry) => entry.path);
   assert.deepEqual(reordered.map((entry) => entry.path), ["b", "a"]);
+});
+
+test("sin Blob configurado devuelve metadatos vacíos", async () => {
+  const meta = await readCourseMeta("finanzas", async () => {
+    throw new Error("no debería consultar Blob");
+  }, false);
+  assert.deepEqual(meta, { version: 1, updatedAt: new Date(0).toISOString(), modules: [] });
 });

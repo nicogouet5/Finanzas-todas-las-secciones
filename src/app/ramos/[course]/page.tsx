@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { MaterialSearch, type ExplorerModule, type SearchIndexItem } from "@/components/material-search";
+import { addBuiltInCourseModules } from "@/lib/built-in-course-modules";
 import { isCourse } from "@/lib/admin-materials";
 import { listCourseModules } from "@/lib/course-modules";
 import { courseLabel, type CourseSlug } from "@/lib/material-paths";
@@ -11,7 +12,7 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
   if (!isCourse(course)) notFound();
   const items = await listMaterials();
   const { modules } = await listCourseModules(course as CourseSlug, items);
-  const published = modules.filter((module) => module.published);
+  const published = addBuiltInCourseModules(course as CourseSlug, modules, items).filter((module) => module.published);
   const crumbs = [{ href: "/", label: "Inicio" }, { label: courseLabel(course as CourseSlug) }];
   const byPath = new Map(items.map((item) => [item.path, item]));
 

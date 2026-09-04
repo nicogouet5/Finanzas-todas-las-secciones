@@ -21,6 +21,9 @@ export type FolderNode = {
   files: MaterialItem[];
 };
 
+export const CERTAMEN_1_PRESENTATION_PATH = "finanzas-corporativas/certamen-1/presentacion-certamen-1-finanzas-corporativas.html";
+export const CERTAMEN_1_PRESENTATION_TITLE = "Repaso Certamen 1: riesgo, dos períodos y portafolios";
+
 const LOCAL_MATERIALS: MaterialItem[] = [
   {
     path: "finanzas/administracion-de-caja/index.html",
@@ -52,11 +55,25 @@ const LOCAL_MATERIALS: MaterialItem[] = [
     uploadedAt: null,
     source: "local",
   },
+  {
+    path: CERTAMEN_1_PRESENTATION_PATH,
+    name: CERTAMEN_1_PRESENTATION_TITLE,
+    url: "/materiales/finanzas-corporativas/certamen-1/presentacion-certamen-1-finanzas-corporativas.html",
+    downloadUrl: "/materiales/finanzas-corporativas/certamen-1/presentacion-certamen-1-finanzas-corporativas.html",
+    size: 170_558,
+    contentType: "text/html",
+    uploadedAt: null,
+    source: "local",
+  },
 ];
 
-export async function listMaterials(): Promise<MaterialItem[]> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return LOCAL_MATERIALS;
+export function mergeMaterials(blobItems: MaterialItem[], localItems: MaterialItem[]): MaterialItem[] {
+  const merged = new Map(blobItems.map((item) => [item.path, item]));
+  for (const item of localItems) merged.set(item.path, item);
+  return [...merged.values()].sort((a, b) => a.path.localeCompare(b.path, "es"));
+}
 
+async function readBlobMaterials(): Promise<MaterialItem[]> {
   const materials: MaterialItem[] = [];
   let cursor: string | undefined;
   do {
@@ -83,6 +100,11 @@ export async function listMaterials(): Promise<MaterialItem[]> {
   } while (cursor);
 
   return materials;
+}
+
+export async function listMaterials(readRemote: () => Promise<MaterialItem[]> = readBlobMaterials, blobEnabled = Boolean(process.env.BLOB_READ_WRITE_TOKEN)): Promise<MaterialItem[]> {
+  if (!blobEnabled) return mergeMaterials([], LOCAL_MATERIALS);
+  return mergeMaterials(await readRemote(), LOCAL_MATERIALS);
 }
 
 export function buildMaterialTree(items: MaterialItem[]): FolderNode {

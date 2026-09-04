@@ -1,7 +1,9 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { EmptyState } from "@/components/empty-state";
+import { addBuiltInCourseModules } from "@/lib/built-in-course-modules";
 import { listCourseModules } from "@/lib/course-modules";
 import { courseLabel, type CourseSlug } from "@/lib/material-paths";
+import { previewUrl } from "@/lib/material-preview";
 import { listMaterials, type MaterialItem } from "@/lib/materials";
 import { notFound } from "next/navigation";
 
@@ -63,20 +65,12 @@ function Viewer({ contentType, name, url, downloadUrl }: { contentType: string; 
   );
 }
 
-// Blob sirve el HTML como `attachment`, así que estos tipos se previsualizan a
-// través de nuestro proxy aislado (ver src/app/api/material/view/[...path]).
-const PROXIED_CONTENT_TYPES = new Set(["text/html", "image/svg+xml"]);
-
-function previewUrl(material: { path: string; url: string; contentType: string }): string {
-  if (!PROXIED_CONTENT_TYPES.has(material.contentType)) return material.url;
-  return `/api/material/view/${material.path.split("/").map(encodeURIComponent).join("/")}`;
-}
-
 /** Título que el admin le puso al material en su módulo; si no hay, el nombre del archivo. */
 async function displayTitle(material: MaterialItem, materials: MaterialItem[], course: string): Promise<string> {
   if (!COURSE_SLUGS.has(course)) return material.name;
   const { modules } = await listCourseModules(course as CourseSlug, materials);
-  for (const module of modules) {
+  const publicModules = addBuiltInCourseModules(course as CourseSlug, modules, materials);
+  for (const module of publicModules) {
     for (const item of module.items) {
       if (item.path === material.path && item.title) return item.title;
     }

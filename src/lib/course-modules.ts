@@ -34,10 +34,11 @@ export function reorderBy<T extends { order: number }>(items: readonly T[], orde
   return ordered.map((item, index) => ({ ...item, order: index }));
 }
 
-export async function readCourseMeta(course: CourseSlug): Promise<CourseMeta> {
+export async function readCourseMeta(course: CourseSlug, readBlobMeta: typeof get = get, blobEnabled = Boolean(process.env.BLOB_READ_WRITE_TOKEN)): Promise<CourseMeta> {
+  if (!blobEnabled) return EMPTY_META;
   // useCache:false evita el CDN público; también se escribe con cacheControlMaxAge:0 (ver abajo)
   // porque el default de put() es cachear 30 días, que useCache:false por sí solo no revierte.
-  const result = await get(metaKey(course), { access: "public", useCache: false });
+  const result = await readBlobMeta(metaKey(course), { access: "public", useCache: false });
   if (!result || result.statusCode !== 200) return EMPTY_META;
   return JSON.parse(await new Response(result.stream).text()) as CourseMeta;
 }
